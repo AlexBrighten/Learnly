@@ -1,6 +1,6 @@
 import { Atom, Earth, Orbit, Trophy, Zap } from 'lucide-react'
-import { AnimatedTitle } from '@/components/motion/AnimatedTitle'
-import { ReasonsItem } from '@/components/landing/ReasonsItem'
+import { AnimatedTitle } from '../../components/motion/AnimatedTitle'
+import { ReasonsItem } from '../../components/landing/ReasonsItem'
 
 export function Reasons() {
   return (

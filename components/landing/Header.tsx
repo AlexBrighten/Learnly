@@ -1,10 +1,10 @@
 import NextLink from 'next/link'
 import { ClerkLoaded, UserButton, SignedIn, SignedOut, SignInButton } from '@clerk/nextjs'
-import { Button } from '@/components/ui/button'
-import { ThemeToggle } from '@/components/theme/toggle'
+import { Button } from '../../components/ui/button'
+import { ThemeToggle } from '../../components/theme/toggle'
 
-import LogoSVG from '@/public/logo.svg'
-import GithubSVG from '@/public/img/github.svg'
+import LogoSVG from '../../public/logo.svg'
+import GithubSVG from '../../public/img/github.svg'
 
 export function Header() {
   return (
@@ -13,7 +13,7 @@ export function Header() {
         <div className="flex flex-1 items-center justify-start gap-1 max-sm:hidden">
           <Button variant="ghost" size="icon" asChild>
             <a
-              href="https://github.com/elitenoire/trylingo"
+              href="https://github.com/AlexBrighten/Learnly.git"
               target="_blank"
               aria-label="GitHub repo"
               title="Github repo"

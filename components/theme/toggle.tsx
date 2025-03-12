@@ -1,10 +1,10 @@
 'use client'
 
 import { Sun, Moon } from 'lucide-react'
-import { Button, type ButtonProps } from '@/components/ui/button'
-import { useThemeToggle } from '@/components/theme/useToggle'
+import { Button, type ButtonProps } from '../../components/ui/button'
+import { useThemeToggle } from '../../components/theme/useToggle'
 
-import { cn } from '@/lib/utils'
+import { cn } from '../../lib/utils'
 
 export function ThemeToggle({ className, ...props }: ButtonProps) {
   const { isDark, toggle, hydrated } = useThemeToggle()

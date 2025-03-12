@@ -1,11 +1,11 @@
 import NextImage from 'next/image'
 import type { Variants } from 'framer-motion'
-import { AspectRatio } from '@/components/ui/aspect-ratio'
-import { Button } from '@/components/ui/button'
-import { AnimatedTitle } from '@/components/motion/AnimatedTitle'
-import { AnimatedList, AnimatedListItem } from '@/components/motion/AnimatedList'
+import { AspectRatio } from '../../components/ui/aspect-ratio'
+import { Button } from '../../components/ui/button'
+import { AnimatedTitle } from '../../components/motion/AnimatedTitle'
+import { AnimatedList, AnimatedListItem } from '../../components/motion/AnimatedList'
 
-import { languages } from '@/config/languages'
+import { languages } from '../../configs/languages'
 
 const list = {
   visible: {

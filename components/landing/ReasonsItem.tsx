@@ -3,7 +3,7 @@
 import { type PropsWithChildren, useEffect } from 'react'
 import { useAnimate, useInView } from 'framer-motion'
 
-import { cn } from '@/lib/utils'
+import { cn } from '../../lib/utils'
 
 type ReasonsItemProps = {
   reason: string

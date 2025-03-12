@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { getMetadataRootURL } from '@/lib/utils'
+import { getMetadataRootURL } from '../lib/utils'
 
 export const sharedMetadata: Metadata = {
   // FIX ISSUE: Automatic generation overrides the icons here

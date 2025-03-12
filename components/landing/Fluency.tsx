@@ -1,6 +1,6 @@
-import { type PillVariant, LanguagePill } from '@/components/landing/LanguagePill'
+import { type PillVariant, LanguagePill } from '../../components/landing/LanguagePill'
 
-import { languages } from '@/config/languages'
+import { languages } from '../../configs/languages'
 
 const variants: NonNullable<PillVariant>[] = [
   'secondary',

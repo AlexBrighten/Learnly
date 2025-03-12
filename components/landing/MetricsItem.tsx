@@ -2,10 +2,10 @@
 
 import { motion, useScroll, useSpring, useTransform, type MotionValue } from 'framer-motion'
 import { type PropsWithChildren, useRef } from 'react'
-import { AspectRatio } from '@/components/ui/aspect-ratio'
-import { AnimatedNumber, type AnimatedNumberProps } from '@/components/motion/AnimatedNumber'
+import { AspectRatio } from '../../components/ui/aspect-ratio'
+import { AnimatedNumber, type AnimatedNumberProps } from '../../components/motion/AnimatedNumber'
 
-import { cn } from '@/lib/utils'
+import { cn } from '../../lib/utils'
 
 type MetricsItemProps = {
   description: string

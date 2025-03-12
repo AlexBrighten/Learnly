@@ -1,13 +1,13 @@
 import type { Metadata } from 'next'
 import { ClerkProvider } from '@clerk/nextjs'
-import { ThemeProvider } from '@/components/theme/provider'
-import { Analytics } from '@/components/Analytics'
-import { Toaster } from '@/components/ui/sonner'
+import { ThemeProvider } from '../components/theme/provider'
+import { Analytics } from '../components/Analytics'
+import { Toaster } from '../components/ui/sonner'
 
-import { sharedMetadata } from '@/config/metadata'
+import { sharedMetadata } from '../configs/metadata'
 
-import { fonts } from '@/styles/fonts'
-import '@/styles/globals.css'
+import { fonts } from '../styles/fonts'
+import '../styles/globals.css'
 import Provider from './provider'
 
 export const metadata: Metadata = {

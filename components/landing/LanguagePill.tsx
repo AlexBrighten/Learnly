@@ -3,7 +3,7 @@
 import NextImage from 'next/image'
 import { type PropsWithChildren, useRef } from 'react'
 import { motion, useScroll, useSpring, useTransform } from 'framer-motion'
-import { type PillProps, Pill } from '@/components/ui/pill'
+import { type PillProps, Pill } from '../../components/ui/pill'
 
 export type PillVariant = PillProps['variant']
 

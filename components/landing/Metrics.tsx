@@ -3,13 +3,13 @@
 import { type PropsWithChildren, useRef } from 'react'
 import { useScroll, useTransform, useSpring, motion } from 'framer-motion'
 
-import { MetricsItem } from '@/components/landing/MetricsItem'
-import { AnimatedTitle } from '@/components/motion/AnimatedTitle'
+import { MetricsItem } from '../../components/landing/MetricsItem'
+import { AnimatedTitle } from '../../components/motion/AnimatedTitle'
 
-import FaceOneSVG from '@/public/img/face-1.svg'
-import FaceTwoSVG from '@/public/img/face-2.svg'
-import FaceThreeSVG from '@/public/img/face-3.svg'
-import FaceFourSVG from '@/public/img/face-4.svg'
+import FaceOneSVG from '../../public/img/face-1.svg'
+import FaceTwoSVG from '../../public/img/face-2.svg'
+import FaceThreeSVG from '../../public/img/face-3.svg'
+import FaceFourSVG from '../../public/img/face-4.svg'
 
 export function Metrics({ children }: PropsWithChildren) {
   const ref = useRef<HTMLUListElement>(null)

@@ -3,7 +3,7 @@
 import { useTheme } from 'next-themes'
 import { useCallback, useEffect, useState } from 'react'
 
-import { THEME_DARK, THEME_LIGHT } from '@/components/theme/constants'
+import { THEME_DARK, THEME_LIGHT } from '../../components/theme/constants'
 
 export function useThemeToggle() {
   const [hydrated, setHydrated] = useState(false)

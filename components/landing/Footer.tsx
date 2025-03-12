@@ -1,10 +1,10 @@
 import NextLink from 'next/link'
 import { ClerkLoaded, SignedIn, SignedOut, SignUpButton } from '@clerk/nextjs'
 import { Asterisk, ArrowDown } from 'lucide-react'
-import { MotionDiv } from '@/components/motion'
-import { AnimatedTitle } from '@/components/motion/AnimatedTitle'
+import { MotionDiv } from '../../components/motion'
+import { AnimatedTitle } from '../../components/motion/AnimatedTitle'
 
-import LogoSVG from '@/public/logo.svg'
+import LogoSVG from '../../public/logo.svg'
 
 function StartCTA() {
   return (
