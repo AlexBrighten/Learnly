@@ -1,21 +1,14 @@
 import React from "react";
 import Loader from "./Loader";
 import Link from "next/link";
+import SpotlightCard from './NewCourseCardItem';
 
 function CourseCardItem({ course }) {
   console.log("course", course.status);
 
   return (
-    <div className="p-4  w-full border rounded-lg shadow-md bg-gray-100">
-      <div className="flex flex-col justify-between">
-        <div className="flex items-center mb-2 gap-2">
-          <img
-            src="/knowledge.png"
-            alt="knowledge"
-            width={50}
-            height={50}
-            className="mr-4"
-          />
+      <SpotlightCard className="custom-spotlight-card" spotlightColor="rgba(0, 229, 255, 0.2)">
+        <div className="flex items-center mb-5 gap-2">
           <h2 className="text-lg font-semibold">
             {course.courseLayout.courseTitle}
           </h2>
@@ -38,8 +31,8 @@ function CourseCardItem({ course }) {
             </Link>
           )}
         </div>
-      </div>
-    </div>
+        </SpotlightCard>
+
   );
 }
 

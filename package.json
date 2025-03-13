@@ -37,6 +37,7 @@
     "clsx": "^2.1.1",
     "dotenv": "^16.4.5",
     "drizzle-orm": "^0.36.4",
+    "flowbite-react": "^0.10.2",
     "framer-motion": "^12.5.0",
     "inngest": "^3.26.3",
     "lucide-react": "^0.461.0",

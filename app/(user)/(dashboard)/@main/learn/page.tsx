@@ -6,7 +6,10 @@ export default function Learn() {
   return (
     <div>
       <WelcomeBanner />
-      <CourseList />
+      <div className="mt-5">
+        <CourseList />
+      </div>
+
     </div>
   )
 }

@@ -3,7 +3,9 @@
 import React, { useEffect, useState } from "react";
 import { useUser } from "@clerk/nextjs";
 import axios from "axios";
-import CourseCardItem from "./CourseCardItem";
+
+import CourseItem from "./card";
+
 
 function CourseList() {
   const { user } = useUser();
@@ -36,11 +38,12 @@ function CourseList() {
   if (error) return <div>{error}</div>;
 
   return (
-    <div className="mt-10 bg-ghost p-5 rounded-lg shadow-md">
-        <h2 className="font-bold text-2xl">Your Study Material</h2>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 mt-2 gap-5">
+    <div className="mt-10">
+        <h2 className="font-bold text-2xl mb-5">Your Study Material</h2>
+
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
             {courseList.map((course, index) => (
-                <CourseCardItem course={course} key={index}/>
+                <CourseItem course={course} key={index}/>
             ))}
         </div>
     </div>
