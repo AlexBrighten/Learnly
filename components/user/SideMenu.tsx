@@ -1,9 +1,9 @@
 import NextLink from 'next/link'
-import { SideMenuItem } from '@/components/user/SideMenuItem'
-import { SideMenuThemeButton } from '@/components/user/SideMenuThemeButton'
-import { SideMenuUserButton } from '@/components/user/SideMenuUserButton'
+import { SideMenuItem } from '../../components/user/SideMenuItem'
+import { SideMenuThemeButton } from '../../components/user/SideMenuThemeButton'
+import { SideMenuUserButton } from '../../components/user/SideMenuUserButton'
 
-import LogoSVG from '@/public/logo.svg'
+import LogoSVG from '../../public/logo.svg'
 
 export function SideMenu() {
   return (

@@ -2,9 +2,9 @@
 
 import { ClerkLoaded, UserButton, ClerkLoading } from '@clerk/nextjs'
 
-import { buttonVariants } from '@/components/ui/button'
+import { buttonVariants } from '../../components/ui/button'
 
-import { cn } from '@/lib/utils'
+import { cn } from '../../lib/utils'
 
 export function SideMenuUserButton() {
   return (

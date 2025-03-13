@@ -1,7 +1,7 @@
 'use client'
 
-import { Button, type ButtonProps } from '@/components/ui/button'
-import { useThemeToggle } from '@/components/theme/useToggle'
+import { Button, type ButtonProps } from '../../components/ui/button'
+import { useThemeToggle } from '../../components/theme/useToggle'
 
 export function SideMenuThemeButton({ className, ...props }: ButtonProps) {
   const { isDark, toggle, hydrated, theme } = useThemeToggle()

@@ -36,7 +36,7 @@ function CourseList() {
   if (error) return <div>{error}</div>;
 
   return (
-    <div className="mt-10">
+    <div className="mt-10 bg-ghost p-5 rounded-lg shadow-md">
         <h2 className="font-bold text-2xl">Your Study Material</h2>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 mt-2 gap-5">
             {courseList.map((course, index) => (

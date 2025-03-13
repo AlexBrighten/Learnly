@@ -4,7 +4,7 @@ import type { Route } from 'next'
 import NextImage from 'next/image'
 import NextLink from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Button } from '@/components/ui/button'
+import { Button } from '../../components/ui/button'
 
 type SideMenuItemProps = {
   label: string

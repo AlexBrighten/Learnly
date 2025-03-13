@@ -8,7 +8,7 @@ function CourseCardItem({ course }) {
   return (
     <div className="p-4  w-full border rounded-lg shadow-md bg-gray-100">
       <div className="flex flex-col justify-between">
-        <div className="flex items-center mb-4">
+        <div className="flex items-center mb-2 gap-2">
           <img
             src="/knowledge.png"
             alt="knowledge"
@@ -21,7 +21,7 @@ function CourseCardItem({ course }) {
           </h2>
         </div>
 
-        <div className="text-sm mt-3  text-gray-600 bg-[#ededed] py-5 px-3 rounded-lg">
+        <div className="text-sm text-gray-600 py-5 px-3 rounded-lg">
           <p className="line-clamp-4">{course.courseLayout.courseSummary}</p>
         </div>
 
