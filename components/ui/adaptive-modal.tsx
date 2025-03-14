@@ -11,7 +11,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog'
+} from '../../components/ui/dialog'
 import {
   Drawer,
   DrawerClose,
@@ -21,7 +21,7 @@ import {
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
-} from '@/components/ui/drawer'
+} from '../../components/ui/drawer'
 
 const BREAKPOINT_QUERY = '(min-width: 640px)'
 
