@@ -1,121 +1,283 @@
+# Learnly
 
-# AI-Powered Learning Management System (AI LMS)
+Learnly is an AI-powered learning platform built with Next.js App Router.
+Users sign in with Google (Firebase Auth), generate structured courses with Google Gemini, and track chapter progress in Firestore.
 
-This project is an AI-powered Learning Management System (AI LMS) built using Next.js, Clerk for authentication, Inngest for function orchestration, Drizzle ORM for database interaction, and Google Gemini for AI-powered content generation. It allows users to create personalized study materials for various learning goals, such as exam preparation, job interviews, or general practice.
+## What Learnly does
 
-## Demo
-- [Demo Video](https://drive.google.com/file/d/1CuD56rPsAf80mXNPXnVTLV0EYdY53B3z/view?t=2)
+- Generates complete courses from a topic using AI.
+- Creates chapter-wise learning materials (notes, flashcards, quiz, Q&A).
+- Tracks progress and XP per chapter.
+- Provides an in-context “Ask Doubt” assistant for each chapter.
+- Includes an explore search endpoint (Wikipedia-backed) to discover topics.
 
+## Tech stack
 
-## Features
+- Framework: Next.js 16 (App Router), React 19
+- Styling/UI: Tailwind CSS, Radix-based UI primitives, Framer Motion
+- Auth: Firebase Authentication (Google provider)
+- Database: Firestore via Firebase Admin SDK on server routes
+- AI: Google Gemini API (`gemini-3-flash-preview`)
+- Tooling: TypeScript (mixed JS/TS codebase), ESLint, Prettier
 
-* **AI-Driven Course Outline Generation:** Users input a topic, course type (e.g., Exam, Job Interview, Practice, Code Prep, Other), and difficulty level.  The AI generates a course outline containing a summary, chapters, chapter summaries, topic lists for each chapter, and relevant emojis, all formatted in JSON.
-* **Dynamic Study Material Generation:**  Based on the course outline, the system dynamically generates various types of study materials:
-    * **Chapter Notes:** Detailed notes for each chapter, broken down by topics, in markdown format for easy rendering.
-    * **Flashcards:** Interactive flashcards for memorization, with front and back content.
-    * **Quizzes:** Gamified quizzes with multiple-choice questions, timers, and scoring to test knowledge.
-    * **Question & Answer (Q&A):**  Comprehensive question-and-answer pairs for deeper learning.
-* **Personalized Learning Paths:** Users can select the specific study material types they want to generate and use.  An "ALL" option generates all available study types.
-* **User Authentication:** Clerk manages user registration, login, and secure sessions.
-* **Database Integration:** Drizzle ORM facilitates interactions with a Neon Serverless PostgreSQL database, storing course data, user information, and generated study materials.
-* **Background Task Orchestration:**  Inngest orchestrates the complex interactions between the AI model, database operations, and asynchronous content generation, providing a seamless user experience.
-* **Progress Tracking (Generating/Ready Status):** UI elements indicate the status of material generation, providing feedback to the user while content is being created in the background.
-* **Interactive Flashcard UI:** Flashcards are presented in a user-friendly swipeable interface with flip card animations.
-* **Gamified Quiz Experience:** Quizzes include timers, scoring, and feedback on correct/incorrect answers, enhancing user engagement.
-* **Markdown Rendering for Notes and Q&A:**  Notes and Q&A content are rendered using `react-markdown` and `remark-gfm` for a clean and formatted display.
+## Architecture overview
 
+Learnly follows a simple client/server split:
 
-## Tech Stack
+- Client pages/components in `app/` and `components/` render UI and call internal API routes.
+- Server routes in `app/api/**` run on the server and talk to Firestore/Gemini securely.
+- Firebase client SDK handles browser auth state.
+- Firebase Admin SDK handles privileged database reads/writes in API routes.
 
-* **Frontend:** Next.js (App Router), React, Tailwind CSS, Ripple UI, Lucide React, Swiper.js, React Card Flip, Styled Components
-* **Backend/Serverless:**  Node.js, Inngest, Clerk
-* **Database:** Neon Serverless PostgreSQL, Drizzle ORM
-* **AI:** Google Gemini
+### Request flow (high level)
 
-
-## Installation and Setup
-
-1. **Clone the Repository:**
-
-```bash
-git clone https://github.com/your-username/ai-lms.git
+```text
+Browser UI (dashboard/create pages)
+    -> /api/* (Next.js Route Handlers)
+        -> Firebase Admin (Firestore)
+        -> Gemini API (course + tutoring content)
+    -> JSON response
+Browser re-renders with updated course/progress state
 ```
 
-2. **Install Dependencies:**
+### Auth flow
+
+1. User signs in on `/sign-in` or `/sign-up` via Firebase Google popup.
+2. `AuthProvider` (`app/context/AuthContext.jsx`) subscribes to auth state.
+3. `app/provider.js` fetches Firebase ID token and stores `firebase-auth-token` cookie.
+4. `middleware.js` checks this cookie for protected routes and redirects unauthenticated users.
+5. `POST /api/create-user` upserts a user record in Firestore on first login.
+
+### Course generation flow
+
+1. User fills the wizard at `/dashboard/create` (topic, type, difficulty, materials).
+2. Client sends payload to `POST /api/generate-course`.
+3. API builds a strict prompt and requests structured JSON from Gemini.
+4. Response is parsed/repaired if needed, then stored in Firestore (`courses` collection).
+5. User is redirected to `/dashboard/course/[courseId]` and can open chapter materials.
+
+### Learning/progress flow
+
+- Notes page can mark a chapter complete via `POST /api/courses/[courseId]/progress`.
+- Flashcards and quiz pages also mark completion when session ends.
+- Progress updates `completedChapters` and increments XP (+50 per chapter completion).
+- Dashboard and course detail screens compute progress percentage from stored data.
+
+## Core data model (Firestore)
+
+### `users` collection
+
+Typical fields:
+
+- `name`
+- `email`
+- `uid`
+- `isMember`
+- `createdAt`
+
+### `courses` collection
+
+Typical fields:
+
+- `title`
+- `summary`
+- `topic`
+- `courseType` (`exam | interview | practice | knowledge`)
+- `difficulty` (`beginner | intermediate | advanced`)
+- `materials` (`notes`, `flashcards`, `quiz`, `qa`)
+- `createdBy` (Firebase `uid`)
+- `status` (`ready`)
+- `createdAt`
+- `progress`
+    - `completedChapters: number[]`
+    - `xpEarned: number`
+- `chapters[]`
+    - `title`, `summary`
+    - `notes` (markdown)
+    - `flashcards[]`
+    - `quiz[]`
+    - `qa[]`
+
+## API reference
+
+### `POST /api/generate-course`
+
+Generates and stores a full course via Gemini.
+
+Request body:
+
+```json
+{
+    "topic": "React",
+    "courseType": "practice",
+    "difficulty": "beginner",
+    "materials": ["notes", "quiz", "flashcards", "qa"],
+    "uid": "firebase-user-id"
+}
+```
+
+Returns:
+
+```json
+{ "courseId": "...", "status": "ready" }
+```
+
+### `GET /api/courses`
+
+Returns courses owned by a user.
+
+- Required header: `x-user-uid: <firebase uid>`
+
+### `GET /api/courses/[courseId]`
+
+Returns full course document for a given course id.
+
+### `POST /api/courses/[courseId]/progress`
+
+Marks chapter complete and increments XP when applicable.
+
+Request body:
+
+```json
+{
+    "chapterIndex": 0,
+    "uid": "firebase-user-id"
+}
+```
+
+### `POST /api/create-user`
+
+Creates user document if it does not exist.
+
+### `POST /api/ask-doubt`
+
+Asks Gemini for a concise tutor-style explanation using chapter context.
+
+### `GET /api/explore-search?q=<topic>`
+
+Returns topic suggestions from Wikipedia search API.
+
+## Folder structure (important parts)
+
+```text
+app/
+    (auth)/sign-in, sign-up          # Firebase Google auth pages
+    (landing)/                       # Marketing/landing pages
+    dashboard/                       # Main app (create, list, learn)
+    api/                             # Route handlers (server)
+    context/AuthContext.jsx          # Client auth state
+    provider.js                      # Cookie sync + create-user trigger
+
+components/
+    dashboard/                       # Dashboard/course UI
+    landing/                         # Landing page sections
+    theme/, ui/                      # Theme and reusable primitives
+
+configs/
+    firebase.js                      # Firebase client SDK init
+    firebaseAdmin.js                 # Firebase admin SDK init
+
+middleware.js                      # Route protection via auth cookie
+```
+
+## Local development setup
+
+### 1) Prerequisites
+
+- Node.js 20+
+- npm 10+
+- A Firebase project (Auth + Firestore enabled)
+- A Google AI Studio Gemini API key
+
+### 2) Install dependencies
 
 ```bash
-cd ai-lms
 npm install
 ```
 
-3. **Environment Variables:**
+### 3) Create `.env.local`
 
-Create a `.env.local` file in the project root and add the following:
+Use this template:
 
+```env
+# Firebase (client)
+NEXT_PUBLIC_FIREBASE_API_KEY=
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=
+NEXT_PUBLIC_FIREBASE_APP_ID=
+NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=
+
+# Firebase Admin (server)
+# JSON string of service account (single line) for local/server use
+FIREBASE_SERVICE_ACCOUNT=
+
+# Gemini
+NEXT_PUBLIC_GEMINI_API_KEY=
 ```
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=YOUR_CLERK_PUBLISHABLE_KEY
-CLERK_SECRET_KEY=YOUR_CLERK_SECRET_KEY
-NEXT_PUBLIC_DATABASE_CONNECTION_STRING=YOUR_NEON_DATABASE_CONNECTION_STRING
-NEXT_PUBLIC_GEMINI_API_KEY=YOUR_GOOGLE_GEMINI_API_KEY
-```
 
-* **`NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`**: Your Clerk publishable key.
-* **`CLERK_SECRET_KEY`**: Your Clerk secret key.
-* **`NEXT_PUBLIC_DATABASE_CONNECTION_STRING`**: Your Neon database connection string.
-* **`NEXT_PUBLIC_GEMINI_API_KEY`**: Your Google Gemini API key.
+Notes:
 
-4. **Run the Development Server:**
+- `NEXT_PUBLIC_GEMINI_API_KEY` is currently read in server routes in this codebase.
+- `FIREBASE_SERVICE_ACCOUNT` should be a JSON string (escaped/newline-free) when provided via env.
+- `firebaseAdmin.js` also has a fallback to default credentials with hardcoded project id; explicit service account is recommended for local reliability.
+
+### 4) Run the app
 
 ```bash
 npm run dev
 ```
 
+Open `http://localhost:3000`.
 
-## Project Structure
+### 5) Optional env utilities
 
-* **`app`**:  Next.js App Router directory containing all application code:
-    * **`api`**:  API routes for backend logic.
-    * **`components`**: Reusable UI components.
-    * **`course/[courseId]`**:  Course details pages (dynamic routing).
-    * **`create`**:  Course creation page.
-    * **`dashboard`**:  User dashboard.
-    * **`layout.js`**: Main application layout.
-    * **`page.js`**: Main landing page (optional).
-    * **`provider.js`**:  Clerk user provider and setup.
-* **`configs`**: Configuration files:
-    * **`AiModel.js`**: Configuration for Google Gemini AI models and prompts.
-    * **`db.js`**: Database connection setup with Drizzle ORM.
-    * **`schema.js`**: Database schema definition using Drizzle ORM.
-* **`inngest`**: Inngest functions for background tasks:
-    * **`client.js`**: Inngest client setup.
-    * **`functions.js`**: Definitions for all Inngest functions.
-* **`public`**: Static assets (images, icons, etc.).
-* **`styles`**: Global stylesheets.
+Scripts in `package.json`:
 
+- `npm run env:gen` → generate example env file from `.env.local`
+- `npm run env:load` → run command with `.env.local` loaded via dotenvx
 
-## API Routes
+## Available scripts
 
-* **`/api/courses`**:  Handles fetching courses (`GET`) based on `courseId` (for individual course retrieval) or `createdBy` (for user's course list).  Also handles new course creation (`POST`) initiated by the create course page.
-* **`/api/create-user`**:  An API endpoint called by the `CreateNewUser` Inngest function to create a new user record in the database upon initial login with Clerk.
-* **`/api/generate-course-outline`**: Handles the creation of new courses and triggers AI course outline generation.  Receives course details (topic, type, difficulty) via `POST` request.
-* **`/api/study-type`**:  Retrieves study materials for a specific course and study type (`POST`).  Handles "ALL" type to fetch all material types at once.
-* **`/api/study-type-content`**:  Triggers the generation of specific study material content (Flashcards, Quiz, Q&A) through Inngest functions, using `chapter` and `type` data sent via `POST`.
+- `npm run dev` – start dev server
+- `npm run build` – production build
+- `npm run start` – start production server
+- `npm run lint` – run ESLint
 
+## How to use the app
 
-## Inngest Functions
+1. Sign in with Google.
+2. Go to dashboard and click **Create Course**.
+3. Choose topic, course type, difficulty, and materials.
+4. Open the generated course and study chapter content.
+5. Mark chapters complete from Notes / finish Flashcards / finish Quiz.
+6. Track XP and completion progress from dashboard/course page.
 
-* **`helloWorld`**: Example/test function (can be removed).
-* **`CreateNewUser`**: Called on user creation event; creates a new user record in the database if one doesn't exist, syncing with Clerk.
-* **`GenerateNotes`**:  Triggered by `/api/generate-course-outline`; generates detailed chapter notes using the AI and updates the course status in the database.
-* **`GenerateStudyTypeContent`**:  Triggered by `/api/study-type-content`; generates content for specific study material types (flashcards, quizzes, Q&A) using the configured AI models.  Updates the status of the generated content in the database.
+## Troubleshooting
 
+### `401` from `/api/courses`
 
-## Contributing
+- Ensure `x-user-uid` header is sent by client.
+- Ensure user is authenticated and token cookie is present.
 
-Contributions are welcome!  Please follow these guidelines:
+### Redirected to `/sign-in` unexpectedly
 
-* Fork the repository.
-* Create a new branch for your feature/fix.
-* Commit your changes.
-* Push your branch to your fork.
-* Open a pull request.# Learnly
+- `middleware.js` requires `firebase-auth-token` cookie for protected routes.
+- Confirm `app/provider.js` runs after auth and sets cookie.
+
+### Course generation fails
+
+- Verify `NEXT_PUBLIC_GEMINI_API_KEY` is set.
+- Check Gemini quota/rate limits (route retries `429`/`503` with backoff).
+
+### Firestore/Admin errors locally
+
+- Provide valid `FIREBASE_SERVICE_ACCOUNT` JSON.
+- Confirm Firestore is enabled in the Firebase project.
+
+## Notes for contributors
+
+- Keep route handler changes in `app/api/**` small and typed where possible.
+- Preserve existing response shapes unless coordinated with frontend changes.
+- If adding new env vars, update this README in the same PR.
