@@ -48,30 +48,24 @@ function CreateCourseInner() {
     setLoading(true);
     setError("");
     try {
-      // Generate course via Gemini
+      // Generate course via Gemini (and save to Firestore server-side)
       const res = await fetch("/api/generate-course", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ topic, difficulty, type }),
+        body: JSON.stringify({
+          topic,
+          difficulty,
+          type,
+          userId: user?.uid,
+          userEmail: user?.email
+        }),
       });
 
       const data = await res.json();
       if (!res.ok || data.error) throw new Error(data.error || "Generation failed");
 
-      const course = data.course;
-
-      // Save to Firestore
-      const docRef = await addDoc(collection(db, "courses"), {
-        ...course,
-        topic,
-        difficulty,
-        type,
-        userId: user?.uid || null,
-        userEmail: user?.email || null,
-        createdAt: serverTimestamp(),
-      });
-
-      router.push(`/course/${docRef.id}`);
+      // Redirect using the docId returned from the backend
+      router.push(`/course/${data.docId}`);
     } catch (err) {
       setError(err.message || "Something went wrong. Please try again.");
       setLoading(false);

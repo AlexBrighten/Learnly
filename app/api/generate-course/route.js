@@ -1,8 +1,10 @@
 import { NextResponse } from "next/server";
+import { adminDb } from "@/configs/firebaseAdmin";
+import { FieldValue } from "firebase-admin/firestore";
 
 export async function POST(req) {
   try {
-    const { topic, difficulty, type } = await req.json();
+    const { topic, difficulty, type, userId, userEmail } = await req.json();
 
     if (!topic) {
       return NextResponse.json({ error: "Topic is required" }, { status: 400 });
@@ -13,7 +15,7 @@ export async function POST(req) {
     if (!apiKey) {
       return NextResponse.json({ error: "Gemini API key not configured" }, { status: 500 });
     }
-    const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+    const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
 
     const typeDescriptions = {
       flashcards: "flashcard-style bite-sized facts and key points",
@@ -69,7 +71,7 @@ Create exactly 4 chapters, each with 3-4 lessons. Make the content educational, 
       try {
         const errJson = JSON.parse(errText);
         errMsg = errJson?.error?.message || errMsg;
-      } catch {}
+      } catch { }
       return NextResponse.json({ error: errMsg }, { status: 500 });
     }
 
@@ -87,7 +89,18 @@ Create exactly 4 chapters, each with 3-4 lessons. Make the content educational, 
       return NextResponse.json({ error: "Invalid JSON from AI — please try again." }, { status: 500 });
     }
 
-    return NextResponse.json({ course });
+    // Save to Firestore via Admin SDK (bypasses security rules)
+    const docRef = await adminDb.collection("courses").add({
+      ...course,
+      topic,
+      difficulty,
+      type,
+      userId: userId || null,
+      userEmail: userEmail || null,
+      createdAt: FieldValue.serverTimestamp(),
+    });
+
+    return NextResponse.json({ course, docId: docRef.id });
   } catch (error) {
     console.error("Generate course error:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });

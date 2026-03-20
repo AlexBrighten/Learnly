@@ -24,12 +24,13 @@ export default function CourseViewerPage() {
   useEffect(() => {
     const fetchCourse = async () => {
       try {
-        const docRef = doc(db, "courses", courseId);
-        const snap = await getDoc(docRef);
-        if (!snap.exists()) {
-          setError("Course not found.");
+        const res = await fetch(`/api/courses/${courseId}`);
+        const data = await res.json();
+
+        if (!res.ok) {
+          setError(data.error || "Course not found.");
         } else {
-          setCourse({ id: snap.id, ...snap.data() });
+          setCourse(data.course);
         }
       } catch (err) {
         setError(err.message);
@@ -37,7 +38,7 @@ export default function CourseViewerPage() {
         setLoading(false);
       }
     };
-    fetchCourse();
+    if (courseId) fetchCourse();
   }, [courseId]);
 
   const toggleLesson = (key) => setOpenLesson(prev => prev === key ? null : key);
@@ -153,6 +154,7 @@ export default function CourseViewerPage() {
                           className="w-full flex items-center gap-4 px-5 py-4 hover:bg-white/5 transition-colors text-left">
                           <button onClick={e => { e.stopPropagation(); markComplete(key); }}
                             className={`shrink-0 transition-colors ${isDone ? "text-emerald-400" : "text-slate-600 hover:text-slate-400"}`}>
+
                             <CheckCircle2 className="w-5 h-5" />
                           </button>
                           <span className={`flex-1 text-sm ${isDone ? "line-through text-slate-500" : "text-slate-200"}`}>
@@ -180,11 +182,10 @@ export default function CourseViewerPage() {
                               </div>
                             )}
                             <button onClick={() => markComplete(key)}
-                              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${
-                                isDone
+                              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${isDone
                                   ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
                                   : "bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 hover:bg-indigo-500/20"
-                              }`}>
+                                }`}>
                               <CheckCircle2 className="w-4 h-4" />
                               {isDone ? "Completed!" : "Mark as complete"}
                             </button>
