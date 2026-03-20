@@ -75,7 +75,7 @@ export default function NotesPage() {
         <div className="max-w-3xl mx-auto">
             <button
                 onClick={() => router.push(`/dashboard/course/${courseId}`)}
-                className="flex items-center gap-2 text-gray-500 hover:text-gray-900 dark:text-slate-400 dark:hover:text-white transition-colors mb-6"
+                className="flex items-center gap-2 text-gray-500 hover:text-gray-900 dark:text-slate-400 dark:hover:text-white transition-colors mb-5"
             >
                 <ArrowLeft className="w-4 h-4" />
                 Back to Course
@@ -84,7 +84,7 @@ export default function NotesPage() {
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="rounded-2xl bg-white border border-gray-200 dark:bg-white/5 dark:border-white/10 p-8"
+                className="rounded-2xl bg-white border border-gray-200 dark:bg-white/5 dark:border-white/10 p-5 sm:p-8"
             >
                 <div className="flex items-center gap-3 mb-6">
                     <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center">
@@ -92,7 +92,7 @@ export default function NotesPage() {
                     </div>
                     <div>
                         <span className="text-xs text-gray-400 dark:text-slate-500 font-medium">CHAPTER {idx + 1} — NOTES</span>
-                        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{chapter.title}</h1>
+                        <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">{chapter.title}</h1>
                     </div>
                 </div>
 
@@ -103,7 +103,7 @@ export default function NotesPage() {
                     {completed ? (
                         <div className="flex items-center gap-2 text-emerald-500 dark:text-emerald-400 font-medium">
                             <CheckCircle2 className="w-5 h-5" />
-                            Chapter completed! +50 XP
+                            Chapter completed!
                         </div>
                     ) : (
                         <motion.button
@@ -113,7 +113,7 @@ export default function NotesPage() {
                             disabled={marking}
                             className="px-6 py-3 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold shadow-lg shadow-indigo-500/25 disabled:opacity-50"
                         >
-                            {marking ? "Saving..." : "Mark as Completed (+50 XP)"}
+                            {marking ? "Saving..." : "Mark as Completed"}
                         </motion.button>
                     )}
                 </div>

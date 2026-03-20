@@ -76,7 +76,7 @@ export default function AskDoubtFAB({ courseTopic, chapterTitle, chapterNotes }:
                 onClick={() => setOpen(!open)}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className={`fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full shadow-2xl flex items-center justify-center transition-all ${
+                className={`fixed bottom-20 right-4 md:bottom-6 md:right-6 z-50 w-14 h-14 rounded-full shadow-2xl flex items-center justify-center transition-all ${
                     open
                         ? "bg-gray-200 dark:bg-white/10 text-gray-600 dark:text-slate-300 shadow-lg"
                         : "bg-gradient-to-br from-indigo-500 to-purple-600 text-white shadow-indigo-500/40"
@@ -94,7 +94,7 @@ export default function AskDoubtFAB({ courseTopic, chapterTitle, chapterNotes }:
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 20, scale: 0.95 }}
                         transition={{ duration: 0.2 }}
-                        className="fixed bottom-24 right-6 z-50 w-[min(420px,calc(100vw-3rem))] rounded-2xl border border-gray-200 bg-white shadow-2xl dark:border-white/10 dark:bg-[#0f1425] overflow-hidden flex flex-col"
+                        className="fixed bottom-36 right-4 md:bottom-24 md:right-6 z-50 w-[min(420px,calc(100vw-2rem))] rounded-2xl border border-gray-200 bg-white shadow-2xl dark:border-white/10 dark:bg-[#0f1425] overflow-hidden flex flex-col"
                         style={{ maxHeight: "min(520px, calc(100vh - 10rem))" }}
                     >
                         {/* Header */}
