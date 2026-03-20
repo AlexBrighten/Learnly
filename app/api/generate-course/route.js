@@ -54,30 +54,39 @@ function buildPrompt(topic, courseType, difficulty, materials) {
 
   if (materials.includes("notes")) {
     materialInstructions.push(
-      `"notes": A comprehensive markdown-formatted study note for this chapter (at least 300 words with headers, bullet points, and key concepts highlighted)`
+      `"notes": A comprehensive markdown-formatted study note for this chapter (at least 500 words). Follow the TEACHING STYLE rules below strictly.`
     );
   }
   if (materials.includes("flashcards")) {
     materialInstructions.push(
-      `"flashcards": An array of 5-8 flashcard objects, each with "front" (question/term) and "back" (answer/definition)`
+      `"flashcards": An array of 5-8 flashcard objects, each with "front" (question/term) and "back" (answer/definition — use simple language)`
     );
   }
   if (materials.includes("quiz")) {
     materialInstructions.push(
-      `"quiz": An array of 5 quiz objects, each with "question", "options" (array of 4 strings), "correctAnswer" (index 0-3), and "explanation"`
+      `"quiz": An array of 5 quiz objects, each with "question", "options" (array of 4 strings), "correctAnswer" (index 0-3), and "explanation" (explain WHY the answer is correct in simple words)`
     );
   }
   if (materials.includes("qa")) {
     materialInstructions.push(
-      `"qa": An array of 4-6 Q&A objects, each with "question" and "answer" (markdown formatted)`
+      `"qa": An array of 4-6 Q&A objects, each with "question" and "answer" (markdown formatted, follow the same TEACHING STYLE as notes)`
     );
   }
 
-  return `You are an expert course creator. Generate a structured learning course in JSON format.
+  return `You are an expert course creator who teaches like the best teacher a 10-year-old ever had. Generate a structured learning course in JSON format.
 
 Topic: "${topic}"
 Course Type: ${courseType || "knowledge"} (context: ${getCourseTypeContext(courseType)})
 Difficulty: ${difficulty || "beginner"}
+
+TEACHING STYLE (apply to notes and qa answers):
+1. **Explain Like I'm 10**: Use simple sentences, fun analogies, and real-world examples. Start explanations with phrases like "Imagine you have a...", "Think of it like...", "It's just like when you...".
+2. **Preserve Technical Terms**: Always keep the real technical term — write it in **bold** the first time and immediately define it in simple words. Example: "This is called **Recursion** — it's when a function calls itself, like looking into two mirrors facing each other and seeing infinite reflections."
+3. **Why This Matters**: After explaining a concept, add a short "💡 **Why this matters:** ..." line explaining the real-world use or importance.
+4. **Code Snippets**: If the topic involves programming or technology, include code examples inside fenced code blocks (\`\`\`language). Add a brief comment above explaining what the code does. Every code snippet should be self-contained and runnable.
+5. **Structure for Scanning**: Use headers (##, ###), bullet points, numbered lists, and bold key terms. Break long paragraphs into 2-3 sentence chunks.
+6. **High ROI**: Every paragraph should teach something new. No filler. No repeating the same thing in different words.
+7. **Progressive Depth**: Start each chapter with the simplest version of the concept, then layer on complexity.
 
 Generate a course with EXACTLY this JSON structure (no markdown fences, pure JSON only):
 {
@@ -95,9 +104,10 @@ Generate a course with EXACTLY this JSON structure (no markdown fences, pure JSO
 
 Rules:
 - Generate 5 chapters
-- Make content educational, accurate, and engaging
+- Make content educational, accurate, and deeply engaging
 - Difficulty "${difficulty}" means: ${getDifficultyContext(difficulty)}
-- Each chapter should build on the previous one
+- Each chapter should build on the previous one progressively
+- Notes must be at least 500 words with rich markdown formatting
 - Return ONLY valid JSON, no other text`;
 }
 

@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, Loader2, Layers, ThumbsUp, ThumbsDown, RotateCcw, Trophy } from "lucide-react";
 import { useAuth } from "@/app/context/AuthContext";
 import { useParams, useRouter } from "next/navigation";
+import AskDoubtFAB from "@/components/dashboard/AskDoubtFAB";
 
 export default function FlashcardsPage() {
     const { user } = useAuth();
@@ -79,7 +80,7 @@ export default function FlashcardsPage() {
     if (loading) {
         return (
             <div className="flex items-center justify-center min-h-[60vh]">
-                <Loader2 className="w-8 h-8 text-indigo-400 animate-spin" />
+                <Loader2 className="w-8 h-8 text-indigo-500 dark:text-indigo-400 animate-spin" />
             </div>
         );
     }
@@ -89,8 +90,8 @@ export default function FlashcardsPage() {
     if (!chapter || flashcards.length === 0) {
         return (
             <div className="text-center py-20">
-                <h2 className="text-xl font-bold text-white">No flashcards available</h2>
-                <button onClick={() => router.back()} className="text-indigo-400 mt-4 hover:underline">
+                <h2 className="text-xl font-bold text-gray-900 dark:text-white">No flashcards available</h2>
+                <button onClick={() => router.back()} className="text-indigo-600 dark:text-indigo-400 mt-4 hover:underline">
                     Go back
                 </button>
             </div>
@@ -110,32 +111,32 @@ export default function FlashcardsPage() {
                     <div className="w-20 h-20 mx-auto rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center shadow-2xl shadow-yellow-500/30">
                         <Trophy className="w-10 h-10 text-white" />
                     </div>
-                    <h2 className="text-3xl font-bold text-white">Session Complete!</h2>
-                    <p className="text-slate-400">You reviewed all {flashcards.length} flashcards</p>
+                    <h2 className="text-3xl font-bold text-gray-900 dark:text-white">Session Complete!</h2>
+                    <p className="text-gray-500 dark:text-slate-400">You reviewed all {flashcards.length} flashcards</p>
 
                     <div className="grid grid-cols-2 gap-4">
-                        <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20">
-                            <p className="text-3xl font-bold text-emerald-400">{known}</p>
-                            <p className="text-sm text-emerald-400/70">Known</p>
+                        <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 dark:bg-emerald-500/10 dark:border-emerald-500/20">
+                            <p className="text-3xl font-bold text-emerald-600 dark:text-emerald-400">{known}</p>
+                            <p className="text-sm text-emerald-600/70 dark:text-emerald-400/70">Known</p>
                         </div>
-                        <div className="p-4 rounded-2xl bg-red-500/10 border border-red-500/20">
-                            <p className="text-3xl font-bold text-red-400">{unknown}</p>
-                            <p className="text-sm text-red-400/70">Need Review</p>
+                        <div className="p-4 rounded-2xl bg-red-50 border border-red-200 dark:bg-red-500/10 dark:border-red-500/20">
+                            <p className="text-3xl font-bold text-red-600 dark:text-red-400">{unknown}</p>
+                            <p className="text-sm text-red-600/70 dark:text-red-400/70">Need Review</p>
                         </div>
                     </div>
 
-                    <div className="h-3 rounded-full bg-white/5 overflow-hidden">
+                    <div className="h-3 rounded-full bg-gray-100 dark:bg-white/5 overflow-hidden">
                         <div
                             className="h-full rounded-full bg-gradient-to-r from-emerald-500 to-emerald-400 transition-all duration-700"
                             style={{ width: `${percentage}%` }}
                         />
                     </div>
-                    <p className="text-indigo-400 font-medium">+50 XP earned!</p>
+                    <p className="text-indigo-600 dark:text-indigo-400 font-medium">+50 XP earned!</p>
 
                     <div className="flex gap-4 justify-center">
                         <button
                             onClick={restart}
-                            className="flex items-center gap-2 px-5 py-3 rounded-xl bg-white/5 text-white hover:bg-white/10 transition-colors"
+                            className="flex items-center gap-2 px-5 py-3 rounded-xl bg-gray-100 text-gray-900 hover:bg-gray-200 dark:bg-white/5 dark:text-white dark:hover:bg-white/10 transition-colors"
                         >
                             <RotateCcw className="w-4 h-4" />
                             Try Again
@@ -156,7 +157,7 @@ export default function FlashcardsPage() {
         <div className="max-w-xl mx-auto">
             <button
                 onClick={() => router.push(`/dashboard/course/${courseId}`)}
-                className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors mb-6"
+                className="flex items-center gap-2 text-gray-500 hover:text-gray-900 dark:text-slate-400 dark:hover:text-white transition-colors mb-6"
             >
                 <ArrowLeft className="w-4 h-4" />
                 Back to Course
@@ -164,16 +165,16 @@ export default function FlashcardsPage() {
 
             <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-3">
-                    <Layers className="w-5 h-5 text-purple-400" />
-                    <h1 className="text-xl font-bold text-white">{chapter.title} — Flashcards</h1>
+                    <Layers className="w-5 h-5 text-purple-500 dark:text-purple-400" />
+                    <h1 className="text-xl font-bold text-gray-900 dark:text-white">{chapter.title} — Flashcards</h1>
                 </div>
-                <span className="text-sm text-slate-400">
+                <span className="text-sm text-gray-500 dark:text-slate-400">
                     {currentCard + 1} / {flashcards.length}
                 </span>
             </div>
 
             {/* Progress Bar */}
-            <div className="h-2 rounded-full bg-white/5 overflow-hidden mb-8">
+            <div className="h-2 rounded-full bg-gray-100 dark:bg-white/5 overflow-hidden mb-8">
                 <motion.div
                     className="h-full rounded-full bg-gradient-to-r from-purple-500 to-pink-500"
                     animate={{ width: `${((currentCard + 1) / flashcards.length) * 100}%` }}
@@ -203,19 +204,19 @@ export default function FlashcardsPage() {
                         >
                             {/* Front */}
                             <div
-                                className="absolute inset-0 rounded-3xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 border border-white/10 flex items-center justify-center p-8 backface-hidden"
+                                className="absolute inset-0 rounded-3xl bg-gradient-to-br from-purple-100 to-pink-100 border border-purple-200 dark:from-purple-500/20 dark:to-pink-500/20 dark:border-white/10 flex items-center justify-center p-8 backface-hidden"
                                 style={{ backfaceVisibility: "hidden" }}
                             >
-                                <p className="text-xl font-semibold text-white text-center">
+                                <p className="text-xl font-semibold text-gray-900 dark:text-white text-center">
                                     {flashcards[currentCard]?.front}
                                 </p>
                             </div>
                             {/* Back */}
                             <div
-                                className="absolute inset-0 rounded-3xl bg-gradient-to-br from-indigo-500/20 to-purple-500/20 border border-indigo-500/20 flex items-center justify-center p-8"
+                                className="absolute inset-0 rounded-3xl bg-gradient-to-br from-indigo-100 to-purple-100 border border-indigo-200 dark:from-indigo-500/20 dark:to-purple-500/20 dark:border-indigo-500/20 flex items-center justify-center p-8"
                                 style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
                             >
-                                <p className="text-lg text-slate-200 text-center">
+                                <p className="text-lg text-gray-700 dark:text-slate-200 text-center">
                                     {flashcards[currentCard]?.back}
                                 </p>
                             </div>
@@ -224,7 +225,7 @@ export default function FlashcardsPage() {
                 </motion.div>
             </AnimatePresence>
 
-            <p className="text-center text-sm text-slate-500 mt-3 mb-6">
+            <p className="text-center text-sm text-gray-400 dark:text-slate-500 mt-3 mb-6">
                 {flipped ? "How well did you know this?" : "Tap to reveal the answer"}
             </p>
 
@@ -239,7 +240,7 @@ export default function FlashcardsPage() {
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         onClick={() => handleAnswer(false)}
-                        className="flex items-center gap-2 px-8 py-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 font-medium hover:bg-red-500/20 transition-colors"
+                        className="flex items-center gap-2 px-8 py-3 rounded-xl bg-red-50 border border-red-200 text-red-600 font-medium hover:bg-red-100 dark:bg-red-500/10 dark:border-red-500/20 dark:text-red-400 dark:hover:bg-red-500/20 transition-colors"
                     >
                         <ThumbsDown className="w-5 h-5" />
                         Don&apos;t Know
@@ -248,13 +249,19 @@ export default function FlashcardsPage() {
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         onClick={() => handleAnswer(true)}
-                        className="flex items-center gap-2 px-8 py-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 font-medium hover:bg-emerald-500/20 transition-colors"
+                        className="flex items-center gap-2 px-8 py-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-600 font-medium hover:bg-emerald-100 dark:bg-emerald-500/10 dark:border-emerald-500/20 dark:text-emerald-400 dark:hover:bg-emerald-500/20 transition-colors"
                     >
                         <ThumbsUp className="w-5 h-5" />
                         Know It
                     </motion.button>
                 </motion.div>
             )}
+
+            <AskDoubtFAB
+                courseTopic={course?.topic || course?.title || ""}
+                chapterTitle={chapter?.title || ""}
+                chapterNotes={chapter?.notes || ""}
+            />
         </div>
     );
 }

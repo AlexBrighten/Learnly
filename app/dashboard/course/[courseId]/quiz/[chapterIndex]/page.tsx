@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, Loader2, Zap, Clock, CheckCircle2, XCircle, Trophy, RotateCcw } from "lucide-react";
 import { useAuth } from "@/app/context/AuthContext";
 import { useParams, useRouter } from "next/navigation";
+import AskDoubtFAB from "@/components/dashboard/AskDoubtFAB";
 
 const TIMER_SECONDS = 30;
 
@@ -106,7 +107,7 @@ export default function QuizPage() {
     if (loading) {
         return (
             <div className="flex items-center justify-center min-h-[60vh]">
-                <Loader2 className="w-8 h-8 text-indigo-400 animate-spin" />
+                <Loader2 className="w-8 h-8 text-indigo-500 dark:text-indigo-400 animate-spin" />
             </div>
         );
     }
@@ -114,8 +115,8 @@ export default function QuizPage() {
     if (!course?.chapters?.[idx] || quiz.length === 0) {
         return (
             <div className="text-center py-20">
-                <h2 className="text-xl font-bold text-white">No quiz available</h2>
-                <button onClick={() => router.back()} className="text-indigo-400 mt-4 hover:underline">Go back</button>
+                <h2 className="text-xl font-bold text-gray-900 dark:text-white">No quiz available</h2>
+                <button onClick={() => router.back()} className="text-indigo-600 dark:text-indigo-400 mt-4 hover:underline">Go back</button>
             </div>
         );
     }
@@ -146,16 +147,16 @@ export default function QuizPage() {
                     </motion.div>
 
                     <div>
-                        <h2 className="text-3xl font-bold text-white mb-2">
+                        <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
                             {percentage >= 80 ? "Outstanding! 🎉" : percentage >= 60 ? "Good Job! 💪" : "Keep Practicing! 📚"}
                         </h2>
-                        <p className="text-slate-400">You scored {score} out of {quiz.length}</p>
+                        <p className="text-gray-500 dark:text-slate-400">You scored {score} out of {quiz.length}</p>
                     </div>
 
                     {/* Score Ring */}
                     <div className="relative w-32 h-32 mx-auto">
                         <svg className="w-32 h-32 -rotate-90" viewBox="0 0 128 128">
-                            <circle cx="64" cy="64" r="52" fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="10" />
+                            <circle cx="64" cy="64" r="52" fill="none" stroke="currentColor" strokeWidth="10" className="text-gray-200 dark:text-white/5" />
                             <motion.circle
                                 cx="64" cy="64" r="52" fill="none"
                                 stroke={percentage >= 70 ? "#22c55e" : "#6366f1"}
@@ -168,11 +169,11 @@ export default function QuizPage() {
                             />
                         </svg>
                         <div className="absolute inset-0 flex items-center justify-center">
-                            <span className="text-3xl font-bold text-white">{percentage}%</span>
+                            <span className="text-3xl font-bold text-gray-900 dark:text-white">{percentage}%</span>
                         </div>
                     </div>
 
-                    <div className="flex items-center justify-center gap-2 text-yellow-400 font-medium">
+                    <div className="flex items-center justify-center gap-2 text-yellow-500 dark:text-yellow-400 font-medium">
                         <Zap className="w-5 h-5" />
                         +{xpEarned} XP earned!
                     </div>
@@ -180,7 +181,7 @@ export default function QuizPage() {
                     <div className="flex gap-4 justify-center pt-4">
                         <button
                             onClick={restart}
-                            className="flex items-center gap-2 px-5 py-3 rounded-xl bg-white/5 text-white hover:bg-white/10 transition-colors"
+                            className="flex items-center gap-2 px-5 py-3 rounded-xl bg-gray-100 text-gray-900 hover:bg-gray-200 dark:bg-white/5 dark:text-white dark:hover:bg-white/10 transition-colors"
                         >
                             <RotateCcw className="w-4 h-4" />
                             Try Again
@@ -203,7 +204,7 @@ export default function QuizPage() {
         <div className="max-w-2xl mx-auto">
             <button
                 onClick={() => router.push(`/dashboard/course/${courseId}`)}
-                className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors mb-6"
+                className="flex items-center gap-2 text-gray-500 hover:text-gray-900 dark:text-slate-400 dark:hover:text-white transition-colors mb-6"
             >
                 <ArrowLeft className="w-4 h-4" />
                 Back to Course
@@ -212,13 +213,13 @@ export default function QuizPage() {
             {/* Header */}
             <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-3">
-                    <Zap className="w-5 h-5 text-orange-400" />
-                    <span className="text-sm text-slate-400">
+                    <Zap className="w-5 h-5 text-orange-500 dark:text-orange-400" />
+                    <span className="text-sm text-gray-500 dark:text-slate-400">
                         Question {currentQ + 1} of {quiz.length}
                     </span>
                 </div>
                 <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium ${
-                    timeLeft <= 10 ? "bg-red-500/10 text-red-400" : "bg-white/5 text-slate-300"
+                    timeLeft <= 10 ? "bg-red-50 text-red-600 dark:bg-red-500/10 dark:text-red-400" : "bg-gray-100 text-gray-700 dark:bg-white/5 dark:text-slate-300"
                 }`}>
                     <Clock className="w-4 h-4" />
                     {timeLeft}s
@@ -226,7 +227,7 @@ export default function QuizPage() {
             </div>
 
             {/* Progress */}
-            <div className="h-2 rounded-full bg-white/5 overflow-hidden mb-8">
+            <div className="h-2 rounded-full bg-gray-100 dark:bg-white/5 overflow-hidden mb-8">
                 <motion.div
                     className="h-full rounded-full bg-gradient-to-r from-orange-500 to-amber-500"
                     animate={{ width: `${((currentQ + 1) / quiz.length) * 100}%` }}
@@ -242,22 +243,22 @@ export default function QuizPage() {
                     exit={{ opacity: 0, y: -20 }}
                     className="space-y-6"
                 >
-                    <h2 className="text-xl font-semibold text-white leading-relaxed">
+                    <h2 className="text-xl font-semibold text-gray-900 dark:text-white leading-relaxed">
                         {question?.question}
                     </h2>
 
                     <div className="space-y-3">
                         {question?.options?.map((option, optIdx) => {
-                            let btnClass = "border-white/10 bg-white/5 hover:border-white/20";
+                            let btnClass = "border-gray-200 bg-white hover:border-gray-300 dark:border-white/10 dark:bg-white/5 dark:hover:border-white/20";
 
                             if (showFeedback) {
                                 if (optIdx === question.correctAnswer) {
-                                    btnClass = "border-emerald-500 bg-emerald-500/10";
+                                    btnClass = "border-emerald-500 bg-emerald-50 dark:bg-emerald-500/10";
                                 } else if (optIdx === selected && optIdx !== question.correctAnswer) {
-                                    btnClass = "border-red-500 bg-red-500/10";
+                                    btnClass = "border-red-500 bg-red-50 dark:bg-red-500/10";
                                 }
                             } else if (selected === optIdx) {
-                                btnClass = "border-indigo-500 bg-indigo-500/10";
+                                btnClass = "border-indigo-500 bg-indigo-50 dark:bg-indigo-500/10";
                             }
 
                             return (
@@ -269,15 +270,15 @@ export default function QuizPage() {
                                     disabled={showFeedback}
                                     className={`w-full p-4 rounded-xl border-2 text-left transition-all flex items-center gap-4 ${btnClass}`}
                                 >
-                                    <span className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-sm font-medium text-slate-400 shrink-0">
+                                    <span className="w-8 h-8 rounded-full bg-gray-100 dark:bg-white/5 flex items-center justify-center text-sm font-medium text-gray-500 dark:text-slate-400 shrink-0">
                                         {String.fromCharCode(65 + optIdx)}
                                     </span>
-                                    <span className="text-white">{option}</span>
+                                    <span className="text-gray-900 dark:text-white">{option}</span>
                                     {showFeedback && optIdx === question.correctAnswer && (
-                                        <CheckCircle2 className="w-5 h-5 text-emerald-400 ml-auto shrink-0" />
+                                        <CheckCircle2 className="w-5 h-5 text-emerald-500 dark:text-emerald-400 ml-auto shrink-0" />
                                     )}
                                     {showFeedback && optIdx === selected && optIdx !== question.correctAnswer && (
-                                        <XCircle className="w-5 h-5 text-red-400 ml-auto shrink-0" />
+                                        <XCircle className="w-5 h-5 text-red-500 dark:text-red-400 ml-auto shrink-0" />
                                     )}
                                 </motion.button>
                             );
@@ -289,16 +290,22 @@ export default function QuizPage() {
                         <motion.div
                             initial={{ opacity: 0, height: 0 }}
                             animate={{ opacity: 1, height: "auto" }}
-                            className="p-4 rounded-xl bg-indigo-500/5 border border-indigo-500/10"
+                            className="p-4 rounded-xl bg-indigo-50 border border-indigo-200 dark:bg-indigo-500/5 dark:border-indigo-500/10"
                         >
-                            <p className="text-sm text-slate-300">
-                                <span className="font-medium text-indigo-400">Explanation: </span>
+                            <p className="text-sm text-gray-700 dark:text-slate-300">
+                                <span className="font-medium text-indigo-600 dark:text-indigo-400">Explanation: </span>
                                 {question.explanation}
                             </p>
                         </motion.div>
                     )}
                 </motion.div>
             </AnimatePresence>
+
+            <AskDoubtFAB
+                courseTopic={course?.topic || course?.title || ""}
+                chapterTitle={course?.chapters?.[idx]?.title || ""}
+                chapterNotes={course?.chapters?.[idx]?.notes || ""}
+            />
         </div>
     );
 }
