@@ -5,6 +5,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, Loader2, HelpCircle, ChevronDown } from "lucide-react";
 import { useAuth } from "@/app/context/AuthContext";
 import { useParams, useRouter } from "next/navigation";
+import MarkdownRenderer from "@/components/dashboard/MarkdownRenderer";
+import AskDoubtFAB from "@/components/dashboard/AskDoubtFAB";
 
 export default function QAPage() {
     const { user } = useAuth();
@@ -35,7 +37,7 @@ export default function QAPage() {
     if (loading) {
         return (
             <div className="flex items-center justify-center min-h-[60vh]">
-                <Loader2 className="w-8 h-8 text-indigo-400 animate-spin" />
+                <Loader2 className="w-8 h-8 text-indigo-500 dark:text-indigo-400 animate-spin" />
             </div>
         );
     }
@@ -46,28 +48,17 @@ export default function QAPage() {
     if (!chapter || qaList.length === 0) {
         return (
             <div className="text-center py-20">
-                <h2 className="text-xl font-bold text-white">No Q&A available</h2>
-                <button onClick={() => router.back()} className="text-indigo-400 mt-4 hover:underline">Go back</button>
+                <h2 className="text-xl font-bold text-gray-900 dark:text-white">No Q&A available</h2>
+                <button onClick={() => router.back()} className="text-indigo-600 dark:text-indigo-400 mt-4 hover:underline">Go back</button>
             </div>
         );
     }
-
-    // Simple markdown line renderer
-    const renderAnswer = (text) => {
-        if (!text) return null;
-        return text.split("\n").map((line, i) => {
-            if (line.startsWith("- ") || line.startsWith("* ")) return <li key={i} className="text-slate-300 ml-6 list-disc mb-1">{line.replace(/^[-*] /, "")}</li>;
-            if (line.startsWith("**") && line.endsWith("**")) return <p key={i} className="font-semibold text-white mb-1">{line.replace(/\*\*/g, "")}</p>;
-            if (line.trim() === "") return <div key={i} className="h-2" />;
-            return <p key={i} className="text-slate-300 leading-relaxed mb-1">{line}</p>;
-        });
-    };
 
     return (
         <div className="max-w-3xl mx-auto">
             <button
                 onClick={() => router.push(`/dashboard/course/${courseId}`)}
-                className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors mb-6"
+                className="flex items-center gap-2 text-gray-500 hover:text-gray-900 dark:text-slate-400 dark:hover:text-white transition-colors mb-6"
             >
                 <ArrowLeft className="w-4 h-4" />
                 Back to Course
@@ -78,8 +69,8 @@ export default function QAPage() {
                     <HelpCircle className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                    <span className="text-xs text-slate-500 font-medium">CHAPTER {idx + 1} — Q&A</span>
-                    <h1 className="text-2xl font-bold text-white">{chapter.title}</h1>
+                    <span className="text-xs text-gray-400 dark:text-slate-500 font-medium">CHAPTER {idx + 1} — Q&A</span>
+                    <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{chapter.title}</h1>
                 </div>
             </div>
 
@@ -91,21 +82,21 @@ export default function QAPage() {
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.05 * qIdx }}
-                        className="rounded-2xl bg-white/5 border border-white/10 overflow-hidden"
+                        className="rounded-2xl bg-white border border-gray-200 dark:bg-white/5 dark:border-white/10 overflow-hidden"
                     >
                         <button
                             onClick={() => setExpanded(expanded === qIdx ? null : qIdx)}
-                            className="w-full flex items-center gap-4 p-5 text-left hover:bg-white/[0.03] transition-colors"
+                            className="w-full flex items-center gap-4 p-5 text-left hover:bg-gray-50 dark:hover:bg-white/[0.03] transition-colors"
                         >
-                            <span className="w-8 h-8 rounded-full bg-emerald-500/10 flex items-center justify-center text-sm font-medium text-emerald-400 shrink-0">
+                            <span className="w-8 h-8 rounded-full bg-emerald-50 dark:bg-emerald-500/10 flex items-center justify-center text-sm font-medium text-emerald-600 dark:text-emerald-400 shrink-0">
                                 {qIdx + 1}
                             </span>
-                            <span className="text-white font-medium flex-1">{item.question}</span>
+                            <span className="text-gray-900 dark:text-white font-medium flex-1">{item.question}</span>
                             <motion.div
                                 animate={{ rotate: expanded === qIdx ? 180 : 0 }}
                                 transition={{ duration: 0.2 }}
                             >
-                                <ChevronDown className="w-5 h-5 text-slate-400 shrink-0" />
+                                <ChevronDown className="w-5 h-5 text-gray-400 dark:text-slate-400 shrink-0" />
                             </motion.div>
                         </button>
 
@@ -118,9 +109,9 @@ export default function QAPage() {
                                     transition={{ duration: 0.3 }}
                                     className="overflow-hidden"
                                 >
-                                    <div className="px-5 pb-5 pt-0 pl-[4.25rem] border-t border-white/5">
+                                    <div className="px-5 pb-5 pt-0 pl-[4.25rem] border-t border-gray-100 dark:border-white/5">
                                         <div className="pt-4">
-                                            {renderAnswer(item.answer)}
+                                            <MarkdownRenderer content={item.answer} />
                                         </div>
                                     </div>
                                 </motion.div>
@@ -129,6 +120,12 @@ export default function QAPage() {
                     </motion.div>
                 ))}
             </div>
+
+            <AskDoubtFAB
+                courseTopic={course?.topic || course?.title || ""}
+                chapterTitle={chapter.title}
+                chapterNotes={chapter.notes}
+            />
         </div>
     );
 }

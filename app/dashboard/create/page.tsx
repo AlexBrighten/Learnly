@@ -31,9 +31,9 @@ const COURSE_TYPES = [
 ];
 
 const DIFFICULTIES = [
-    { id: "beginner", label: "Beginner", emoji: "🌱", description: "Start from scratch", color: "border-emerald-500 bg-emerald-500/10 text-emerald-400" },
-    { id: "intermediate", label: "Intermediate", emoji: "🔥", description: "Build on your knowledge", color: "border-yellow-500 bg-yellow-500/10 text-yellow-400" },
-    { id: "advanced", label: "Advanced", emoji: "⚡", description: "Master-level content", color: "border-red-500 bg-red-500/10 text-red-400" },
+    { id: "beginner", label: "Beginner", emoji: "🌱", description: "Start from scratch", color: "border-emerald-500 bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400" },
+    { id: "intermediate", label: "Intermediate", emoji: "🔥", description: "Build on your knowledge", color: "border-yellow-500 bg-yellow-50 text-yellow-600 dark:bg-yellow-500/10 dark:text-yellow-400" },
+    { id: "advanced", label: "Advanced", emoji: "⚡", description: "Master-level content", color: "border-red-500 bg-red-50 text-red-600 dark:bg-red-500/10 dark:text-red-400" },
 ];
 
 const MATERIALS = [
@@ -136,8 +136,8 @@ export default function CreateCoursePage() {
                         <Brain className="w-10 h-10 text-white" />
                     </motion.div>
                     <div>
-                        <h2 className="text-2xl font-bold text-white mb-2">AI is generating your course...</h2>
-                        <p className="text-slate-400">Creating chapters, notes, quizzes, and more for <span className="text-indigo-400 font-medium">{topic}</span></p>
+                        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">AI is generating your course...</h2>
+                        <p className="text-gray-500 dark:text-slate-400">Creating chapters, notes, quizzes, and more for <span className="text-indigo-600 dark:text-indigo-400 font-medium">{topic}</span></p>
                     </div>
                     <motion.div
                         className="flex items-center justify-center gap-1"
@@ -155,7 +155,7 @@ export default function CreateCoursePage() {
                         <motion.p
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
-                            className="text-red-400 text-sm"
+                            className="text-red-500 dark:text-red-400 text-sm"
                         >
                             {error}
                         </motion.p>
@@ -170,13 +170,13 @@ export default function CreateCoursePage() {
             {/* Progress Bar */}
             <div className="mb-10">
                 <div className="flex items-center justify-between mb-3">
-                    <h1 className="text-2xl font-bold text-white flex items-center gap-2">
-                        <Sparkles className="w-6 h-6 text-indigo-400" />
+                    <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                        <Sparkles className="w-6 h-6 text-indigo-500 dark:text-indigo-400" />
                         Create a Course
                     </h1>
-                    <span className="text-sm text-slate-400">Step {step + 1} of {STEPS.length}</span>
+                    <span className="text-sm text-gray-500 dark:text-slate-400">Step {step + 1} of {STEPS.length}</span>
                 </div>
-                <div className="h-2 rounded-full bg-white/5 overflow-hidden">
+                <div className="h-2 rounded-full bg-gray-100 dark:bg-white/5 overflow-hidden">
                     <motion.div
                         className="h-full rounded-full bg-gradient-to-r from-indigo-500 to-purple-500"
                         animate={{ width: `${((step + 1) / STEPS.length) * 100}%` }}
@@ -198,8 +198,8 @@ export default function CreateCoursePage() {
                     {step === 0 && (
                         <div className="space-y-6">
                             <div>
-                                <h2 className="text-3xl font-bold text-white mb-2">What do you want to learn?</h2>
-                                <p className="text-slate-400">Enter any topic and our AI will create a personalized course for you.</p>
+                                <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">What do you want to learn?</h2>
+                                <p className="text-gray-500 dark:text-slate-400">Enter any topic and our AI will create a personalized course for you.</p>
                             </div>
                             <div className="relative">
                                 <input
@@ -208,10 +208,10 @@ export default function CreateCoursePage() {
                                     onChange={(e) => setTopic(e.target.value)}
                                     onKeyDown={(e) => e.key === "Enter" && canProceed() && nextStep()}
                                     placeholder="e.g. Machine Learning, React.js, World History..."
-                                    className="w-full px-6 py-5 text-lg rounded-2xl bg-white/5 border-2 border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:bg-white/[0.07] transition-all"
+                                    className="w-full px-6 py-5 text-lg rounded-2xl bg-gray-50 border-2 border-gray-200 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-indigo-500 focus:bg-white transition-all dark:bg-white/5 dark:border-white/10 dark:text-white dark:placeholder-slate-500 dark:focus:border-indigo-500 dark:focus:bg-white/[0.07]"
                                     autoFocus
                                 />
-                                <BookOpen className="absolute right-5 top-1/2 -translate-y-1/2 w-6 h-6 text-slate-500" />
+                                <BookOpen className="absolute right-5 top-1/2 -translate-y-1/2 w-6 h-6 text-gray-400 dark:text-slate-500" />
                             </div>
                         </div>
                     )}
@@ -220,8 +220,8 @@ export default function CreateCoursePage() {
                     {step === 1 && (
                         <div className="space-y-6">
                             <div>
-                                <h2 className="text-3xl font-bold text-white mb-2">Choose your learning style</h2>
-                                <p className="text-slate-400">How do you want to approach <span className="text-indigo-400 font-medium">{topic}</span>?</p>
+                                <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Choose your learning style</h2>
+                                <p className="text-gray-500 dark:text-slate-400">How do you want to approach <span className="text-indigo-600 dark:text-indigo-400 font-medium">{topic}</span>?</p>
                             </div>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 {COURSE_TYPES.map((type) => (
@@ -232,22 +232,22 @@ export default function CreateCoursePage() {
                                         onClick={() => setCourseType(type.id)}
                                         className={`p-6 rounded-2xl border-2 text-left transition-all ${
                                             courseType === type.id
-                                                ? "border-indigo-500 bg-indigo-500/10"
-                                                : "border-white/10 bg-white/5 hover:border-white/20"
+                                                ? "border-indigo-500 bg-indigo-50 dark:bg-indigo-500/10"
+                                                : "border-gray-200 bg-white hover:border-gray-300 dark:border-white/10 dark:bg-white/5 dark:hover:border-white/20"
                                         }`}
                                     >
                                         <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${type.color} flex items-center justify-center mb-4`}>
                                             <type.icon className="w-6 h-6 text-white" />
                                         </div>
-                                        <h3 className="text-lg font-semibold text-white mb-1">{type.label}</h3>
-                                        <p className="text-sm text-slate-400">{type.description}</p>
+                                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">{type.label}</h3>
+                                        <p className="text-sm text-gray-500 dark:text-slate-400">{type.description}</p>
                                         {courseType === type.id && (
                                             <motion.div
                                                 initial={{ scale: 0 }}
                                                 animate={{ scale: 1 }}
                                                 className="absolute top-4 right-4"
                                             >
-                                                <CheckCircle2 className="w-6 h-6 text-indigo-400" />
+                                                <CheckCircle2 className="w-6 h-6 text-indigo-500 dark:text-indigo-400" />
                                             </motion.div>
                                         )}
                                     </motion.button>
@@ -260,8 +260,8 @@ export default function CreateCoursePage() {
                     {step === 2 && (
                         <div className="space-y-6">
                             <div>
-                                <h2 className="text-3xl font-bold text-white mb-2">Select difficulty</h2>
-                                <p className="text-slate-400">Choose the level that matches your current knowledge.</p>
+                                <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Select difficulty</h2>
+                                <p className="text-gray-500 dark:text-slate-400">Choose the level that matches your current knowledge.</p>
                             </div>
                             <div className="space-y-4">
                                 {DIFFICULTIES.map((diff) => (
@@ -273,13 +273,13 @@ export default function CreateCoursePage() {
                                         className={`w-full p-6 rounded-2xl border-2 text-left transition-all flex items-center gap-5 ${
                                             difficulty === diff.id
                                                 ? diff.color + " border-2"
-                                                : "border-white/10 bg-white/5 hover:border-white/20"
+                                                : "border-gray-200 bg-white hover:border-gray-300 dark:border-white/10 dark:bg-white/5 dark:hover:border-white/20"
                                         }`}
                                     >
                                         <span className="text-4xl">{diff.emoji}</span>
                                         <div>
-                                            <h3 className="text-lg font-semibold text-white">{diff.label}</h3>
-                                            <p className="text-sm text-slate-400">{diff.description}</p>
+                                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{diff.label}</h3>
+                                            <p className="text-sm text-gray-500 dark:text-slate-400">{diff.description}</p>
                                         </div>
                                         {difficulty === diff.id && (
                                             <CheckCircle2 className="w-6 h-6 text-current ml-auto" />
@@ -294,8 +294,8 @@ export default function CreateCoursePage() {
                     {step === 3 && (
                         <div className="space-y-6">
                             <div>
-                                <h2 className="text-3xl font-bold text-white mb-2">Pick your materials</h2>
-                                <p className="text-slate-400">Select what study materials you want generated.</p>
+                                <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Pick your materials</h2>
+                                <p className="text-gray-500 dark:text-slate-400">Select what study materials you want generated.</p>
                             </div>
 
                             {/* Select All */}
@@ -305,13 +305,13 @@ export default function CreateCoursePage() {
                                 onClick={() => toggleMaterial("all")}
                                 className={`w-full p-5 rounded-2xl border-2 flex items-center gap-4 transition-all ${
                                     allSelected
-                                        ? "border-indigo-500 bg-indigo-500/10"
-                                        : "border-white/10 bg-white/5 hover:border-white/20"
+                                        ? "border-indigo-500 bg-indigo-50 dark:bg-indigo-500/10"
+                                        : "border-gray-200 bg-white hover:border-gray-300 dark:border-white/10 dark:bg-white/5 dark:hover:border-white/20"
                                 }`}
                             >
-                                <Sparkles className="w-5 h-5 text-indigo-400" />
-                                <span className="font-semibold text-white">Select All</span>
-                                {allSelected && <CheckCircle2 className="w-5 h-5 text-indigo-400 ml-auto" />}
+                                <Sparkles className="w-5 h-5 text-indigo-500 dark:text-indigo-400" />
+                                <span className="font-semibold text-gray-900 dark:text-white">Select All</span>
+                                {allSelected && <CheckCircle2 className="w-5 h-5 text-indigo-500 dark:text-indigo-400 ml-auto" />}
                             </motion.button>
 
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -323,20 +323,20 @@ export default function CreateCoursePage() {
                                         onClick={() => toggleMaterial(mat.id)}
                                         className={`p-5 rounded-2xl border-2 text-left transition-all ${
                                             selectedMaterials.includes(mat.id)
-                                                ? "border-indigo-500 bg-indigo-500/10"
-                                                : "border-white/10 bg-white/5 hover:border-white/20"
+                                                ? "border-indigo-500 bg-indigo-50 dark:bg-indigo-500/10"
+                                                : "border-gray-200 bg-white hover:border-gray-300 dark:border-white/10 dark:bg-white/5 dark:hover:border-white/20"
                                         }`}
                                     >
                                         <div className="flex items-center gap-3">
                                             <mat.icon className={`w-5 h-5 ${
-                                                selectedMaterials.includes(mat.id) ? "text-indigo-400" : "text-slate-400"
+                                                selectedMaterials.includes(mat.id) ? "text-indigo-500 dark:text-indigo-400" : "text-gray-400 dark:text-slate-400"
                                             }`} />
                                             <div>
-                                                <h3 className="font-semibold text-white">{mat.label}</h3>
-                                                <p className="text-xs text-slate-400">{mat.description}</p>
+                                                <h3 className="font-semibold text-gray-900 dark:text-white">{mat.label}</h3>
+                                                <p className="text-xs text-gray-500 dark:text-slate-400">{mat.description}</p>
                                             </div>
                                             {selectedMaterials.includes(mat.id) && (
-                                                <CheckCircle2 className="w-5 h-5 text-indigo-400 ml-auto" />
+                                                <CheckCircle2 className="w-5 h-5 text-indigo-500 dark:text-indigo-400 ml-auto" />
                                             )}
                                         </div>
                                     </motion.button>
@@ -349,7 +349,7 @@ export default function CreateCoursePage() {
 
             {/* Error */}
             {error && (
-                <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-red-400 text-sm mt-4 text-center">
+                <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-red-500 dark:text-red-400 text-sm mt-4 text-center">
                     {error}
                 </motion.p>
             )}
@@ -359,7 +359,7 @@ export default function CreateCoursePage() {
                 <button
                     onClick={() => setStep((s) => Math.max(0, s - 1))}
                     disabled={step === 0}
-                    className="flex items-center gap-2 px-5 py-3 rounded-xl text-slate-400 hover:text-white transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                    className="flex items-center gap-2 px-5 py-3 rounded-xl text-gray-500 hover:text-gray-900 dark:text-slate-400 dark:hover:text-white transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
                 >
                     <ArrowLeft className="w-4 h-4" />
                     Back

@@ -5,6 +5,8 @@ import { motion } from "framer-motion";
 import { ArrowLeft, CheckCircle2, Loader2, BookOpen } from "lucide-react";
 import { useAuth } from "@/app/context/AuthContext";
 import { useParams, useRouter } from "next/navigation";
+import MarkdownRenderer from "@/components/dashboard/MarkdownRenderer";
+import AskDoubtFAB from "@/components/dashboard/AskDoubtFAB";
 
 export default function NotesPage() {
     const { user } = useAuth();
@@ -55,7 +57,7 @@ export default function NotesPage() {
     if (loading) {
         return (
             <div className="flex items-center justify-center min-h-[60vh]">
-                <Loader2 className="w-8 h-8 text-indigo-400 animate-spin" />
+                <Loader2 className="w-8 h-8 text-indigo-500 dark:text-indigo-400 animate-spin" />
             </div>
         );
     }
@@ -64,31 +66,16 @@ export default function NotesPage() {
     if (!chapter) {
         return (
             <div className="text-center py-20">
-                <h2 className="text-xl font-bold text-white">Chapter not found</h2>
+                <h2 className="text-xl font-bold text-gray-900 dark:text-white">Chapter not found</h2>
             </div>
         );
     }
-
-    // Simple markdown renderer
-    const renderMarkdown = (md) => {
-        if (!md) return <p className="text-slate-400">No notes available for this chapter.</p>;
-
-        return md.split("\n").map((line, i) => {
-            if (line.startsWith("### ")) return <h3 key={i} className="text-lg font-semibold text-white mt-6 mb-2">{line.replace("### ", "")}</h3>;
-            if (line.startsWith("## ")) return <h2 key={i} className="text-xl font-bold text-white mt-8 mb-3">{line.replace("## ", "")}</h2>;
-            if (line.startsWith("# ")) return <h1 key={i} className="text-2xl font-bold text-white mt-8 mb-4">{line.replace("# ", "")}</h1>;
-            if (line.startsWith("- ") || line.startsWith("* ")) return <li key={i} className="text-slate-300 ml-6 list-disc mb-1">{line.replace(/^[-*] /, "")}</li>;
-            if (line.startsWith("**") && line.endsWith("**")) return <p key={i} className="font-semibold text-white mb-2">{line.replace(/\*\*/g, "")}</p>;
-            if (line.trim() === "") return <div key={i} className="h-4" />;
-            return <p key={i} className="text-slate-300 leading-relaxed mb-2">{line}</p>;
-        });
-    };
 
     return (
         <div className="max-w-3xl mx-auto">
             <button
                 onClick={() => router.push(`/dashboard/course/${courseId}`)}
-                className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors mb-6"
+                className="flex items-center gap-2 text-gray-500 hover:text-gray-900 dark:text-slate-400 dark:hover:text-white transition-colors mb-6"
             >
                 <ArrowLeft className="w-4 h-4" />
                 Back to Course
@@ -97,26 +84,24 @@ export default function NotesPage() {
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="rounded-2xl bg-white/5 border border-white/10 p-8"
+                className="rounded-2xl bg-white border border-gray-200 dark:bg-white/5 dark:border-white/10 p-8"
             >
                 <div className="flex items-center gap-3 mb-6">
                     <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center">
                         <BookOpen className="w-5 h-5 text-white" />
                     </div>
                     <div>
-                        <span className="text-xs text-slate-500 font-medium">CHAPTER {idx + 1} — NOTES</span>
-                        <h1 className="text-2xl font-bold text-white">{chapter.title}</h1>
+                        <span className="text-xs text-gray-400 dark:text-slate-500 font-medium">CHAPTER {idx + 1} — NOTES</span>
+                        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{chapter.title}</h1>
                     </div>
                 </div>
 
-                <div className="prose prose-invert max-w-none">
-                    {renderMarkdown(chapter.notes)}
-                </div>
+                <MarkdownRenderer content={chapter.notes} />
 
                 {/* Mark Completed */}
-                <div className="mt-10 pt-6 border-t border-white/10">
+                <div className="mt-10 pt-6 border-t border-gray-200 dark:border-white/10">
                     {completed ? (
-                        <div className="flex items-center gap-2 text-emerald-400 font-medium">
+                        <div className="flex items-center gap-2 text-emerald-500 dark:text-emerald-400 font-medium">
                             <CheckCircle2 className="w-5 h-5" />
                             Chapter completed! +50 XP
                         </div>
@@ -133,6 +118,12 @@ export default function NotesPage() {
                     )}
                 </div>
             </motion.div>
+
+            <AskDoubtFAB
+                courseTopic={course?.topic || course?.title || ""}
+                chapterTitle={chapter.title}
+                chapterNotes={chapter.notes}
+            />
         </div>
     );
 }

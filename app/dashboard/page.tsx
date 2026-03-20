@@ -86,14 +86,14 @@ export default function DashboardPage() {
 
             {/* Courses Section */}
             <div>
-                <h2 className="text-xl font-semibold text-white mb-6 flex items-center gap-2">
-                    <BookOpen className="w-5 h-5 text-indigo-400" />
+                <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
+                    <BookOpen className="w-5 h-5 text-indigo-500 dark:text-indigo-400" />
                     Your Courses
                 </h2>
 
                 {loading ? (
                     <div className="flex items-center justify-center py-20">
-                        <Loader2 className="w-8 h-8 text-indigo-400 animate-spin" />
+                        <Loader2 className="w-8 h-8 text-indigo-500 dark:text-indigo-400 animate-spin" />
                     </div>
                 ) : courses.length === 0 ? (
                     // Empty State
@@ -101,15 +101,15 @@ export default function DashboardPage() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.2 }}
-                        className="rounded-3xl border-2 border-dashed border-white/10 bg-white/[0.02] p-12 flex flex-col items-center justify-center text-center"
+                        className="rounded-3xl border-2 border-dashed border-gray-200 bg-gray-50/50 dark:border-white/10 dark:bg-white/[0.02] p-12 flex flex-col items-center justify-center text-center"
                     >
-                        <div className="w-20 h-20 rounded-2xl bg-indigo-500/10 flex items-center justify-center mb-6">
-                            <BrainCircuit className="w-10 h-10 text-indigo-400" />
+                        <div className="w-20 h-20 rounded-2xl bg-indigo-100 dark:bg-indigo-500/10 flex items-center justify-center mb-6">
+                            <BrainCircuit className="w-10 h-10 text-indigo-500 dark:text-indigo-400" />
                         </div>
-                        <h3 className="text-2xl font-bold text-white mb-2">
+                        <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
                             Start Your Learning Journey
                         </h3>
-                        <p className="text-slate-400 max-w-md mb-8">
+                        <p className="text-gray-500 dark:text-slate-400 max-w-md mb-8">
                             Create your first AI-powered course in seconds. Choose any topic and
                             let our AI build a personalized learning path for you.
                         </p>
@@ -141,40 +141,40 @@ export default function DashboardPage() {
                                             href={`/dashboard/course/${course.id}`}
                                             className="block group"
                                         >
-                                            <div className="p-6 rounded-2xl bg-white/5 border border-white/5 backdrop-blur-xl hover:bg-white/[0.08] hover:border-indigo-500/20 transition-all duration-300 relative overflow-hidden">
+                                            <div className="p-6 rounded-2xl bg-white border border-gray-200 hover:border-indigo-300 hover:shadow-lg hover:shadow-indigo-500/5 dark:bg-white/5 dark:border-white/5 dark:backdrop-blur-xl dark:hover:bg-white/[0.08] dark:hover:border-indigo-500/20 transition-all duration-300 relative overflow-hidden">
                                                 {/* Glow Effect */}
                                                 <div className="absolute -top-24 -right-24 w-48 h-48 bg-indigo-500/10 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
                                                 <div className="relative z-10">
                                                     <div className="flex items-start justify-between mb-4">
                                                         <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500/20 to-purple-500/20 flex items-center justify-center">
-                                                            <BrainCircuit className="w-6 h-6 text-indigo-400" />
+                                                            <BrainCircuit className="w-6 h-6 text-indigo-500 dark:text-indigo-400" />
                                                         </div>
                                                         <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${
                                                             course.status === "ready"
-                                                                ? "bg-emerald-500/10 text-emerald-400"
-                                                                : "bg-yellow-500/10 text-yellow-400"
+                                                                ? "bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400"
+                                                                : "bg-yellow-50 text-yellow-600 dark:bg-yellow-500/10 dark:text-yellow-400"
                                                         }`}>
                                                             {course.status === "ready" ? "Ready" : "Generating..."}
                                                         </span>
                                                     </div>
 
-                                                    <h3 className="text-lg font-semibold text-white mb-1 group-hover:text-indigo-300 transition-colors line-clamp-1">
+                                                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1 group-hover:text-indigo-600 dark:group-hover:text-indigo-300 transition-colors line-clamp-1">
                                                         {course.title}
                                                     </h3>
-                                                    <p className="text-sm text-slate-400 mb-4 line-clamp-2">
+                                                    <p className="text-sm text-gray-500 dark:text-slate-400 mb-4 line-clamp-2">
                                                         {course.summary}
                                                     </p>
 
                                                     {/* Progress Bar */}
                                                     <div className="space-y-2">
                                                         <div className="flex justify-between text-xs">
-                                                            <span className="text-slate-400">
+                                                            <span className="text-gray-500 dark:text-slate-400">
                                                                 {course.progress?.completedChapters?.length || 0}/{course.chapters?.length || 0} chapters
                                                             </span>
-                                                            <span className="text-indigo-400 font-medium">{progress}%</span>
+                                                            <span className="text-indigo-600 dark:text-indigo-400 font-medium">{progress}%</span>
                                                         </div>
-                                                        <div className="h-2 rounded-full bg-white/5 overflow-hidden">
+                                                        <div className="h-2 rounded-full bg-gray-100 dark:bg-white/5 overflow-hidden">
                                                             <motion.div
                                                                 initial={{ width: 0 }}
                                                                 animate={{ width: `${progress}%` }}
@@ -185,11 +185,11 @@ export default function DashboardPage() {
                                                     </div>
 
                                                     {/* Footer */}
-                                                    <div className="flex items-center justify-between mt-4 pt-4 border-t border-white/5">
-                                                        <span className="text-xs text-slate-500 capitalize">
+                                                    <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-100 dark:border-white/5">
+                                                        <span className="text-xs text-gray-400 dark:text-slate-500 capitalize">
                                                             {course.difficulty || "beginner"} • {course.courseType || "knowledge"}
                                                         </span>
-                                                        <div className="flex items-center gap-1 text-xs text-yellow-400">
+                                                        <div className="flex items-center gap-1 text-xs text-yellow-500 dark:text-yellow-400">
                                                             <Zap className="w-3 h-3" />
                                                             {course.progress?.xpEarned || 0} XP
                                                         </div>
