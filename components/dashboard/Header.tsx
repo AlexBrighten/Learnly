@@ -1,7 +1,20 @@
+"use client";
+
 import { Bell, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/app/context/AuthContext";
 
-export default function Header({ className }: { className?: string }) {
+export default function Header({ className }) {
+    const { user } = useAuth();
+
+    const displayName = user?.displayName || "Student";
+    const initials = displayName
+        .split(" ")
+        .map((n) => n[0])
+        .join("")
+        .toUpperCase()
+        .slice(0, 2);
+
     return (
         <header className={cn("flex items-center justify-between px-8 bg-[#0a0f1c]/80", className)}>
             <div className="flex-1 max-w-xl hidden md:block">
@@ -25,14 +38,25 @@ export default function Header({ className }: { className?: string }) {
 
                 <div className="flex items-center gap-3 pl-6 border-l border-white/10 cursor-pointer group">
                     <div className="text-right hidden sm:block">
-                        <p className="text-sm font-medium text-white group-hover:text-indigo-300 transition-colors">Student Profile</p>
-                        <p className="text-xs text-slate-400">Level 12 Scholar</p>
+                        <p className="text-sm font-medium text-white group-hover:text-indigo-300 transition-colors">
+                            {displayName}
+                        </p>
+                        <p className="text-xs text-slate-400">{user?.email || "learner"}</p>
                     </div>
-                    <div className="h-10 w-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 p-[2px]">
-                        <div className="h-full w-full rounded-full bg-[#0a0f1c] flex items-center justify-center border-2 border-transparent">
-                            <span className="text-sm font-bold text-white">SP</span>
+                    {user?.photoURL ? (
+                        <img
+                            src={user.photoURL}
+                            alt={displayName}
+                            className="h-10 w-10 rounded-full border-2 border-indigo-500/50 object-cover"
+                            referrerPolicy="no-referrer"
+                        />
+                    ) : (
+                        <div className="h-10 w-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 p-[2px]">
+                            <div className="h-full w-full rounded-full bg-[#0a0f1c] flex items-center justify-center">
+                                <span className="text-sm font-bold text-white">{initials}</span>
+                            </div>
                         </div>
-                    </div>
+                    )}
                 </div>
             </div>
         </header>
