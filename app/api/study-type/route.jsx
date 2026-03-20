@@ -1,14 +1,10 @@
-import { CHAPTER_NOTES_TABLE } from "/configs/schema";
-import { db } from "/configs/db";
-import { eq, and } from "drizzle-orm";
+import { adminDb } from "@/configs/firebaseAdmin";
 import { NextResponse } from "next/server";
-import { STUDY_TYPE_CONTENT_TABLE } from "../../../configs/schema";
 
 export async function POST(req) {
   try {
     const { courseId, studyType } = await req.json();
 
-    // Validate input
     if (!courseId) {
       return NextResponse.json(
         { error: "The 'courseId' field is required." },
@@ -20,17 +16,27 @@ export async function POST(req) {
 
     // Handling "ALL" case
     if (studyType === "ALL") {
-      const notes = await db
-        .select()
-        .from(CHAPTER_NOTES_TABLE)
-        .where(eq(CHAPTER_NOTES_TABLE.courseId, courseId));
+      const notesSnapshot = await adminDb
+        .collection("chapterNotes")
+        .where("courseId", "==", courseId)
+        .get();
+
+      const notes = notesSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
 
       console.log("Fetched Notes:", notes);
 
-      const contentList = await db
-        .select()
-        .from(STUDY_TYPE_CONTENT_TABLE)
-        .where(eq(STUDY_TYPE_CONTENT_TABLE.courseId, courseId));
+      const contentSnapshot = await adminDb
+        .collection("studyTypeContent")
+        .where("courseId", "==", courseId)
+        .get();
+
+      const contentList = contentSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
 
       console.log("Fetched Study Content:", contentList);
 
@@ -46,32 +52,38 @@ export async function POST(req) {
 
     // Handling specific study types
     else if (studyType === "notes") {
-      const notes = await db
-        .select()
-        .from(CHAPTER_NOTES_TABLE)
-        .where(eq(CHAPTER_NOTES_TABLE.courseId, courseId));
+      const notesSnapshot = await adminDb
+        .collection("chapterNotes")
+        .where("courseId", "==", courseId)
+        .get();
+
+      const notes = notesSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
 
       console.log("Notes for courseId:", courseId, notes);
 
       return NextResponse.json(notes);
     } else {
-      const result = await db
-        .select()
-        .from(STUDY_TYPE_CONTENT_TABLE)
-        .where(
-          and(
-            eq(STUDY_TYPE_CONTENT_TABLE.courseId, courseId),
-            eq(STUDY_TYPE_CONTENT_TABLE.type, studyType)
-          )
-        );
+      const contentSnapshot = await adminDb
+        .collection("studyTypeContent")
+        .where("courseId", "==", courseId)
+        .where("type", "==", studyType)
+        .get();
+
+      const result = contentSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
 
       console.log(`Content for type ${studyType}:`, result);
 
-      return NextResponse.json(result[0]);
+      return NextResponse.json(result[0] || null);
     }
   } catch (error) {
     console.error("Error in POST /api/study-type:", error.message);
-    console.error("Full error details:", error); // Log full error details
+    console.error("Full error details:", error);
 
     return NextResponse.json(
       { error: "Failed to fetch study materials. Please try again later." },

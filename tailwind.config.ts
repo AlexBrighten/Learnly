@@ -78,6 +78,30 @@ const config = {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))',
         },
+        xp: {
+          DEFAULT: 'hsl(var(--xp))',
+          foreground: 'hsl(var(--xp-foreground))',
+        },
+        streak: {
+          DEFAULT: 'hsl(var(--streak))',
+          foreground: 'hsl(var(--streak-foreground))',
+        },
+        level: {
+          DEFAULT: 'hsl(var(--level))',
+          foreground: 'hsl(var(--level-foreground))',
+        },
+        success: {
+          DEFAULT: 'hsl(var(--success))',
+          light: 'hsl(var(--success-light))',
+        },
+        danger: {
+          DEFAULT: 'hsl(var(--danger))',
+          light: 'hsl(var(--danger-light))',
+        },
+        warning: {
+          DEFAULT: 'hsl(var(--warning))',
+          light: 'hsl(var(--warning-light))',
+        },
       },
       zIndex: {
         '1': '1',
@@ -109,6 +133,25 @@ const config = {
           '50%': { transform: 'scale(1.1)' },
           '100%': { transform: 'scale(1)' },
         },
+        'float-up': {
+          '0%': { opacity: '1', transform: 'translateY(0) scale(1)' },
+          '100%': { opacity: '0', transform: 'translateY(-40px) scale(1.2)' },
+        },
+        'bounce-in': {
+          '0%': { transform: 'scale(0.3)', opacity: '0' },
+          '50%': { transform: 'scale(1.05)' },
+          '70%': { transform: 'scale(0.95)' },
+          '100%': { transform: 'scale(1)', opacity: '1' },
+        },
+        'shake': {
+          '0%, 100%': { transform: 'translateX(0)' },
+          '10%, 30%, 50%, 70%, 90%': { transform: 'translateX(-4px)' },
+          '20%, 40%, 60%, 80%': { transform: 'translateX(4px)' },
+        },
+        'fade-in-up': {
+          from: { opacity: '0', transform: 'translateY(8px)' },
+          to: { opacity: '1', transform: 'translateY(0)' },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
@@ -116,6 +159,10 @@ const config = {
         'footer-marquee': 'footer-marquee 20s linear infinite',
         'footer-pulse': 'footer-pulse 2s ease-in-out infinite',
         'spin-slow': 'spin 3s linear infinite',
+        'float-up': 'float-up 0.8s ease-out forwards',
+        'bounce-in': 'bounce-in 0.5s ease-out',
+        'shake': 'shake 0.5s ease-in-out',
+        'fade-in-up': 'fade-in-up 0.4s ease-out',
       },
     },
   },

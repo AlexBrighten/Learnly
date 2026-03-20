@@ -1,18 +1,11 @@
 import { NextResponse } from "next/server";
-import { db } from "/configs/db";
-import {
-  USER_TABLE,
-  STUDY_MATERIAL_TABLE,
-  CHAPTER_NOTES_TABLE,
-  STUDY_TYPE_CONTENT_TABLE,
-} from "/configs/schema";
-import { eq } from "drizzle-orm";
+import { adminDb } from "@/configs/firebaseAdmin";
 import {
   generateNotesAiModel,
   GenerateQaAiModel,
   GenerateQuizAiModel,
   GenerateStudyTypeContentAiModel,
-} from "/configs/AiModel";
+} from "@/configs/AiModel";
 
 export async function POST(req) {
   try {
@@ -56,17 +49,18 @@ export async function POST(req) {
 }
 
 async function handleUserCreate(user) {
-  const existingUser = await db
-    .select()
-    .from(USER_TABLE)
-    .where(eq(USER_TABLE.email, user?.primaryEmailAddress?.emailAddress));
+  const usersRef = adminDb.collection("users");
+  const snapshot = await usersRef.where("email", "==", user?.email).get();
 
-  if (existingUser.length === 0) {
-    await db.insert(USER_TABLE).values({
-      name: user?.fullName,
-      email: user?.primaryEmailAddress?.emailAddress,
+  if (snapshot.empty) {
+    await usersRef.add({
+      name: user?.fullName || user?.displayName || "User",
+      email: user?.email,
+      uid: user?.uid || null,
+      isMember: false,
+      createdAt: new Date().toISOString(),
     });
-    console.log("Created new user:", user?.primaryEmailAddress?.emailAddress);
+    console.log("Created new user:", user?.email);
   }
 }
 
@@ -95,7 +89,7 @@ OUTPUT SHOULD BE LIKE :
   "topics": [
     {
       "topicTitle": "What is WordPress?",
-      "content": "# What is WordPress? 🤔\\n\\nWordPress is a free and open-source content management system (CMS) used to build and manage websites and blogs... "
+      "content": "# What is WordPress? 🤔\\\\n\\\\nWordPress is a free and open-source content management system (CMS) used to build and manage websites and blogs... "
     }
   ]
 }
@@ -120,20 +114,27 @@ Give me in .md format
       const result = await generateNotesAiModel.sendMessage(PROMPT);
       const aiResp = await result.response.text();
 
-      await db.insert(CHAPTER_NOTES_TABLE).values({
+      await adminDb.collection("chapterNotes").add({
         chapterId: index,
         courseId: course.courseId,
         notes: aiResp,
+        createdAt: new Date().toISOString(),
       });
     });
 
     await Promise.all(chapterPromises);
     console.log("Chapter Notes Generated");
 
-    await db
-      .update(STUDY_MATERIAL_TABLE)
-      .set({ status: "Ready" })
-      .where(eq(STUDY_MATERIAL_TABLE.courseId, course.courseId));
+    // Update course status to "Ready"
+    const courseSnapshot = await adminDb
+      .collection("studyMaterial")
+      .where("courseId", "==", course.courseId)
+      .get();
+
+    if (!courseSnapshot.empty) {
+      const docRef = courseSnapshot.docs[0].ref;
+      await docRef.update({ status: "Ready" });
+    }
     console.log("Course Status Updated to Ready");
   } catch (error) {
     console.error("Error during notes generation:", error);
@@ -150,18 +151,15 @@ async function handleStudyTypeContent(data) {
         : studyType == "Quiz"
         ? await GenerateQuizAiModel.sendMessage(prompt)
         : await GenerateQaAiModel.sendMessage(prompt);
-    
-    // Attempt to parse the response
+
     const AIResult = JSON.parse(result.response.text());
 
-    await db
-      .update(STUDY_TYPE_CONTENT_TABLE)
-      .set({
-        content: AIResult,
-        status: "Ready",
-      })
-      .where(eq(STUDY_TYPE_CONTENT_TABLE.id, recordId));
-      
+    // Update the Firestore document by ID
+    await adminDb.collection("studyTypeContent").doc(recordId).update({
+      content: AIResult,
+      status: "Ready",
+    });
+
     console.log(`Study type content generated for ${studyType}`);
   } catch (error) {
     console.error("Error generating study type content:", error);

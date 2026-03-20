@@ -1,7 +1,6 @@
 import { executeAsync } from "@/lib/backgroundTasks";
-import { courseOutlineAIModel } from "/configs/AiModel";
-import { db } from "/configs/db";
-import { STUDY_MATERIAL_TABLE } from "/configs/schema";
+import { courseOutlineAIModel } from "@/configs/AiModel";
+import { adminDb } from "@/configs/firebaseAdmin";
 import { NextResponse } from "next/server";
 
 export async function POST(req) {
@@ -38,29 +37,33 @@ export async function POST(req) {
     const aiResult = JSON.parse(aiResp.response.text());
     console.log("Parsed AI result:", aiResult);
 
-    const dbResult = await db
-      .insert(STUDY_MATERIAL_TABLE)
-      .values({
-        courseId,
-        courseType,
-        createdBy,
-        topic,
-        courseLayout: aiResult, // Ensure the AI response contains 'courseLayout'
-      })
-      .returning();
+    // Insert into Firestore
+    const docData = {
+      courseId,
+      courseType,
+      createdBy,
+      topic,
+      difficultyLevel: difficultyLevel || "Easy",
+      courseLayout: aiResult,
+      status: "Generating",
+      createdAt: new Date().toISOString(),
+    };
 
-    console.log("Database insertion result:", dbResult);
+    const docRef = await adminDb.collection("studyMaterial").add(docData);
+    const dbResult = { id: docRef.id, ...docData };
+
+    console.log("Firestore insertion result:", dbResult);
 
     // Trigger background note generation via local background task
     try {
       await executeAsync("notes.generate", {
-        course: dbResult[0],
+        course: dbResult,
       });
     } catch (taskError) {
       console.warn("Task enqueue failed (non-fatal):", taskError.message);
     }
 
-    return NextResponse.json({ result: dbResult[0] });
+    return NextResponse.json({ result: dbResult });
   } catch (error) {
     console.error("Error processing the request:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });

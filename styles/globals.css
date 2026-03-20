@@ -6,11 +6,11 @@
 @layer base {
   :root {
     --background: 0 0% 98%;
-    --foreground: 120 3% 20%;
-    --card: 0 0% 98%;
-    --card-foreground: 120 3% 20%;
-    --popover: 0 0% 98%;
-    --popover-foreground: 120 3% 20%;
+    --foreground: 220 15% 15%;
+    --card: 0 0% 100%;
+    --card-foreground: 220 15% 15%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 15% 15%;
     --primary: 142 71% 45%;
     --primary-foreground: 210 40% 98%;
     --primary-depth: 142 76% 36%;
@@ -19,54 +19,81 @@
     --secondary: 198 93% 60%;
     --secondary-foreground: 210 40% 98%;
     --secondary-depth: 199 89% 48%;
-    --muted: 150 7% 94%;
-    --muted-foreground: 141 6% 45%;
-    --accent: 150 7% 94%;
-    --accent-foreground: 120 3% 20%;
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 9% 46%;
+    --accent: 220 14% 96%;
+    --accent-foreground: 220 15% 15%;
     --highlight: 327 87% 82%;
     --highlight-foreground: 210 40% 98%;
     --highlight-depth: 329 86% 70%;
     --super: 271 91% 65%;
     --super-foreground: 0 0% 98%;
     --super-depth: 271 81% 56%;
-    --destructive: 0 100% 65%;
+    --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
     --destructive-depth: 0 82% 54%;
-    --disabled: 160 6% 90%;
-    --disabled-foreground: 120 3% 50%;
-    --loading: 160 6% 90%;
-    --border: 160 6% 90%;
-    --input: 144 6% 83%;
+    --disabled: 220 14% 92%;
+    --disabled-foreground: 220 9% 55%;
+    --loading: 220 14% 92%;
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
     --ring: 142 71% 45%;
-    --radius: 0.5rem;
+    --radius: 0.75rem;
+
+    /* Gamification tokens */
+    --xp: 45 93% 47%;
+    --xp-foreground: 45 93% 15%;
+    --streak: 25 95% 53%;
+    --streak-foreground: 0 0% 100%;
+    --level: 271 91% 65%;
+    --level-foreground: 0 0% 100%;
+    --success: 142 71% 45%;
+    --success-light: 142 71% 95%;
+    --danger: 0 84% 60%;
+    --danger-light: 0 84% 96%;
+    --warning: 45 93% 47%;
+    --warning-light: 45 93% 95%;
   }
 
   .dark {
-    --background: 140 7% 8%;
-    --foreground: 140 7% 82%;
-    --card: 140 6% 10%;
-    --card-foreground: 140 7% 82%;
-    --popover: 140 6% 10%;
-    --popover-foreground: 140 7% 82%;
+    --background: 224 15% 8%;
+    --foreground: 220 13% 85%;
+    --card: 224 15% 11%;
+    --card-foreground: 220 13% 85%;
+    --popover: 224 15% 11%;
+    --popover-foreground: 220 13% 85%;
     --primary: 142 71% 45%;
     --primary-foreground: 120 9% 2%;
     --secondary: 198 93% 60%;
     --secondary-foreground: 240 9% 2%;
-    --muted: 142 7% 29%;
-    --muted-foreground: 141 5% 48%;
-    --accent: 142 71% 19%;
-    --accent-foreground: 140 7% 82%;
+    --muted: 224 12% 16%;
+    --muted-foreground: 220 9% 50%;
+    --accent: 224 12% 16%;
+    --accent-foreground: 220 13% 85%;
     --super: 271 91% 65%;
     --super-foreground: 0 0% 98%;
     --super-depth: 271 81% 56%;
-    --destructive: 0 100% 65%;
+    --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
-    --disabled: 144 8% 12%;
-    --disabled-foreground: 120 3% 30%;
-    --loading: 144 8% 12%;
-    --border: 144 8% 12%;
-    --input: 143 9% 18%;
+    --disabled: 224 12% 14%;
+    --disabled-foreground: 220 9% 35%;
+    --loading: 224 12% 14%;
+    --border: 224 12% 16%;
+    --input: 224 12% 18%;
     --ring: 142 71% 40%;
+
+    --xp: 45 93% 55%;
+    --xp-foreground: 45 93% 97%;
+    --streak: 25 95% 60%;
+    --streak-foreground: 0 0% 100%;
+    --level: 271 91% 70%;
+    --level-foreground: 0 0% 100%;
+    --success: 142 71% 45%;
+    --success-light: 142 30% 15%;
+    --danger: 0 84% 60%;
+    --danger-light: 0 40% 15%;
+    --warning: 45 93% 55%;
+    --warning-light: 45 40% 15%;
   }
 }
 
@@ -80,7 +107,7 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
   }
 }
 
@@ -91,6 +118,106 @@
   .focus-visible {
     @apply ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
   }
+
+  /* ── Gamification Components ── */
+
+  .xp-badge {
+    @apply inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold tracking-wide;
+    background: hsl(var(--xp) / 0.12);
+    color: hsl(var(--xp));
+  }
+
+  .streak-badge {
+    @apply inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold tracking-wide;
+    background: hsl(var(--streak) / 0.12);
+    color: hsl(var(--streak));
+  }
+
+  .level-pill {
+    @apply inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold tracking-wide;
+    background: hsl(var(--level) / 0.12);
+    color: hsl(var(--level));
+  }
+
+  .card-minimal {
+    @apply rounded-2xl border border-border bg-card p-5 transition-all duration-200;
+  }
+  .card-minimal:hover {
+    @apply shadow-md -translate-y-0.5;
+  }
+
+  .btn-game {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-sm font-bold transition-all duration-200 active:scale-95;
+  }
+  .btn-game-primary {
+    @apply btn-game bg-primary text-primary-foreground hover:opacity-90 shadow-sm;
+  }
+  .btn-game-outline {
+    @apply btn-game border border-border bg-card text-foreground hover:bg-muted;
+  }
+  .btn-game-ghost {
+    @apply btn-game text-muted-foreground hover:bg-muted hover:text-foreground;
+  }
+  .btn-game-success {
+    @apply btn-game text-white shadow-sm;
+    background: hsl(var(--success));
+  }
+  .btn-game-danger {
+    @apply btn-game text-white shadow-sm;
+    background: hsl(var(--danger));
+  }
+
+  .progress-bar-track {
+    @apply h-2 w-full overflow-hidden rounded-full;
+    background: hsl(var(--muted));
+  }
+  .progress-bar-fill {
+    @apply h-full rounded-full transition-all duration-500 ease-out;
+    background: hsl(var(--primary));
+  }
+
+  /* Timer ring used in quiz */
+  .timer-ring {
+    @apply relative inline-flex items-center justify-center;
+  }
+  .timer-ring svg {
+    transform: rotate(-90deg);
+  }
+  .timer-ring circle {
+    transition: stroke-dashoffset 1s linear;
+  }
+
+  /* Step progress dots */
+  .step-dot {
+    @apply size-2.5 rounded-full transition-all duration-200;
+    background: hsl(var(--border));
+  }
+  .step-dot.active {
+    @apply scale-125;
+    background: hsl(var(--primary));
+  }
+  .step-dot.completed {
+    background: hsl(var(--primary) / 0.5);
+  }
+
+  /* Notes prose styles */
+  .prose-notes {
+    @apply max-w-3xl mx-auto leading-relaxed;
+  }
+  .prose-notes h1 { @apply text-2xl font-bold mb-4 mt-8 text-foreground; }
+  .prose-notes h2 { @apply text-xl font-bold mb-3 mt-6 text-foreground; }
+  .prose-notes h3 { @apply text-lg font-semibold mb-2 mt-5 text-foreground; }
+  .prose-notes p { @apply mb-4 text-foreground/80 leading-7; }
+  .prose-notes ul { @apply mb-4 ml-6 list-disc space-y-1 text-foreground/80; }
+  .prose-notes ol { @apply mb-4 ml-6 list-decimal space-y-1 text-foreground/80; }
+  .prose-notes li { @apply leading-7; }
+  .prose-notes code { @apply rounded bg-muted px-1.5 py-0.5 text-sm font-mono text-foreground; }
+  .prose-notes pre { @apply rounded-xl bg-muted p-4 overflow-x-auto mb-4; }
+  .prose-notes blockquote { @apply border-l-4 border-primary/30 pl-4 italic text-muted-foreground mb-4; }
+  .prose-notes table { @apply w-full border-collapse mb-4; }
+  .prose-notes th { @apply border border-border bg-muted px-3 py-2 text-left text-sm font-semibold; }
+  .prose-notes td { @apply border border-border px-3 py-2 text-sm; }
+  .prose-notes strong { @apply font-bold text-foreground; }
 }
 
 @layer utilities {
@@ -98,3 +225,50 @@
     animation-play-state: paused;
   }
 }
+
+/* ── Keyframe Animations ── */
+
+@keyframes float-up {
+  0% { opacity: 1; transform: translateY(0) scale(1); }
+  100% { opacity: 0; transform: translateY(-40px) scale(1.2); }
+}
+@keyframes bounce-in {
+  0% { transform: scale(0.3); opacity: 0; }
+  50% { transform: scale(1.05); }
+  70% { transform: scale(0.95); }
+  100% { transform: scale(1); opacity: 1; }
+}
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-4px); }
+  20%, 40%, 60%, 80% { transform: translateX(4px); }
+}
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 hsl(var(--primary) / 0.4); }
+  50% { box-shadow: 0 0 0 8px hsl(var(--primary) / 0); }
+}
+@keyframes confetti-fall {
+  0% { transform: translateY(-10px) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+}
+@keyframes count-up {
+  0% { transform: translateY(100%); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-float-up { animation: float-up 0.8s ease-out forwards; }
+.animate-bounce-in { animation: bounce-in 0.5s ease-out; }
+.animate-shake { animation: shake 0.5s ease-in-out; }
+.animate-shimmer { animation: shimmer 2s infinite linear; background-size: 200% 100%; }
+.animate-pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
+.animate-confetti { animation: confetti-fall 3s ease-in-out forwards; }
+.animate-count-up { animation: count-up 0.4s ease-out; }
+.animate-fade-in { animation: fade-in 0.4s ease-out; }

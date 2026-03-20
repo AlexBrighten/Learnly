@@ -1,12 +1,17 @@
+'use client'
+
 import NextLink from 'next/link'
-import { ClerkLoaded, UserButton, SignedIn, SignedOut, SignInButton } from '@clerk/nextjs'
+import { useAuth } from '../../app/context/AuthContext'
 import { Button } from '../../components/ui/button'
 import { ThemeToggle } from '../../components/theme/toggle'
+import { User, LogOut } from 'lucide-react'
 
 import LogoSVG from '../../public/logo.svg'
 import GithubSVG from '../../public/img/github.svg'
 
 export function Header() {
+  const { user, loading, signOut } = useAuth()
+
   return (
     <header className="relative flex justify-center">
       <div className="z-1 flex w-full items-center justify-between gap-2 px-2 sm:px-8">
@@ -31,17 +36,34 @@ export function Header() {
           <LogoSVG className="w-[1.5em] group-hover:animate-bounce" />
           <span className="font-display -tracking-widest max-sm:sr-only">Learnly</span>
         </NextLink>
-        <div className="flex flex-1 items-center justify-end">
-          <ClerkLoaded>
-            <SignedIn>
-              <UserButton />
-            </SignedIn>
-            <SignedOut>
-              <SignInButton mode="modal">
-                <Button variant="ghost">Login</Button>
-              </SignInButton>
-            </SignedOut>
-          </ClerkLoaded>
+        <div className="flex flex-1 items-center justify-end gap-2">
+          {!loading && (
+            <>
+              {user ? (
+                <div className="flex items-center gap-2">
+                  {user.photoURL ? (
+                    <img
+                      src={user.photoURL}
+                      alt={user.displayName || 'User'}
+                      className="size-8 rounded-full"
+                    />
+                  ) : (
+                    <span className="flex size-8 items-center justify-center rounded-full bg-primary/20 text-primary">
+                      <User className="size-4" />
+                    </span>
+                  )}
+                  <Button variant="ghost" size="sm" onClick={signOut}>
+                    <LogOut className="mr-1 size-4" />
+                    Logout
+                  </Button>
+                </div>
+              ) : (
+                <Button variant="ghost" asChild>
+                  <NextLink href="/sign-in">Login</NextLink>
+                </Button>
+              )}
+            </>
+          )}
         </div>
       </div>
       <div className="fixed bottom-4 right-4 z-50 sm:hidden">

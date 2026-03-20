@@ -1,6 +1,4 @@
-import { db } from "/configs/db";
-import { STUDY_MATERIAL_TABLE } from "/configs/schema";
-import { desc, eq } from "drizzle-orm";
+import { adminDb } from "@/configs/firebaseAdmin";
 import { NextResponse } from "next/server";
 
 export async function POST(req) {
@@ -14,13 +12,18 @@ export async function POST(req) {
       );
     }
 
-    const result = await db
-      .select()
-      .from(STUDY_MATERIAL_TABLE)
-      .where(eq(STUDY_MATERIAL_TABLE.createdBy, createdBy))
-      .orderBy(desc(STUDY_MATERIAL_TABLE.id))
+    const snapshot = await adminDb
+      .collection("studyMaterial")
+      .where("createdBy", "==", createdBy)
+      .orderBy("createdAt", "desc")
+      .get();
 
-    return NextResponse.json({ result: result });
+    const result = snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+
+    return NextResponse.json({ result });
   } catch (error) {
     console.error("Error fetching courses:", error);
     return NextResponse.json(
@@ -43,16 +46,17 @@ export async function GET(req) {
       );
     }
 
-    const result = await db
-      .select()
-      .from(STUDY_MATERIAL_TABLE)
-      .where(eq(STUDY_MATERIAL_TABLE.courseId, courseId));
+    const snapshot = await adminDb
+      .collection("studyMaterial")
+      .where("courseId", "==", courseId)
+      .get();
 
-    if (result.length === 0) {
+    if (snapshot.empty) {
       return NextResponse.json({ error: "Course not found." }, { status: 404 });
     }
 
-    return NextResponse.json({ result: result[0] });
+    const doc = snapshot.docs[0];
+    return NextResponse.json({ result: { id: doc.id, ...doc.data() } });
   } catch (error) {
     console.error("Error fetching course:", error);
     return NextResponse.json(

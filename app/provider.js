@@ -1,42 +1,40 @@
 "use client";
 
-import { db } from "../configs/db";
-import { USER_TABLE } from "../configs/schema";
-import { useUser } from "@clerk/nextjs";
-import axios from "axios";
-import { eq } from "drizzle-orm";
 import React, { useEffect } from "react";
+import { useAuth } from "./context/AuthContext";
+import axios from "axios";
 
 function Provider({ children }) {
-  const { user } = useUser();
+  const { user, loading } = useAuth();
 
   useEffect(() => {
     if (user) {
       CheckIsNewUser();
+      // Set auth cookie for middleware
+      user.getIdToken().then((token) => {
+        document.cookie = `firebase-auth-token=${token}; path=/; max-age=3600; SameSite=Lax`;
+      });
+    } else if (!loading) {
+      // Clear the cookie when signed out
+      document.cookie = "firebase-auth-token=; path=/; max-age=0";
     }
-  }, []);
+  }, [user, loading]);
 
   const CheckIsNewUser = async () => {
-    const result = await db
-      .select()
-      .from(USER_TABLE)
-      .where(eq(USER_TABLE.email, user?.primaryEmailAddress?.emailAddress));
-    console.log(result);
-    if (result?.length == 0) {
-      const userResp = await db
-        .insert(USER_TABLE)
-        .values({
-          name: user?.fullName,
-          email: user?.primaryEmailAddress?.emailAddress,
-        })
-        .returning({ id: USER_TABLE.id });
-      console.log(userResp);
+    try {
+      const resp = await axios.post("/api/create-user", {
+        user: {
+          uid: user.uid,
+          fullName: user.displayName || "User",
+          email: user.email,
+        },
+      });
+      console.log(resp.data);
+    } catch (error) {
+      console.error("Error checking/creating user:", error);
     }
-
-    const resp = await axios.post('/app/api/create-user', {user: user})
-    console.log(resp.data)
-
   };
+
   return <div>{children}</div>;
 }
 
