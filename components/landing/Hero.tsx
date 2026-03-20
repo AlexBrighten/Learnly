@@ -86,7 +86,7 @@ export function Hero() {
                 transition={{ delay: 0.5 }}
               >
                 <Button variant="primary" size="lg" className="w-full" asChild>
-                  <NextLink href="/learn" className="truncate">
+                  <NextLink href="/dashboard" className="truncate">
                     Continue Learning
                   </NextLink>
                 </Button>
