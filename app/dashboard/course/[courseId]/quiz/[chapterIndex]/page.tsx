@@ -3,12 +3,14 @@
 import { useEffect, useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, Loader2, Zap, Clock, CheckCircle2, XCircle, Trophy, RotateCcw } from "lucide-react";
+import { useAuth } from "@/app/context/AuthContext";
 import { useParams, useRouter } from "next/navigation";
 import AskDoubtFAB from "@/components/dashboard/AskDoubtFAB";
 
 const TIMER_SECONDS = 30;
 
 export default function QuizPage() {
+    const { user } = useAuth();
     const { courseId, chapterIndex } = useParams();
     const router = useRouter();
     const [course, setCourse] = useState(null);
@@ -83,6 +85,7 @@ export default function QuizPage() {
     };
 
     const markCompleted = async () => {
+        if (!user?.uid) return;
         try {
             await fetch(`/api/courses/${courseId}/progress`, {
                 method: "POST",
