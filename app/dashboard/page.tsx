@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sparkles, ArrowRight, BrainCircuit, BookOpen, Plus, Zap, Target, Loader2 } from "lucide-react";
+import { Sparkles, ArrowRight, BrainCircuit, BookOpen, Plus, Loader2 } from "lucide-react";
 import { useAuth } from "@/app/context/AuthContext";
 import Link from "next/link";
 
@@ -35,15 +35,13 @@ export default function DashboardPage() {
         return Math.round((completed / total) * 100);
     };
 
-    const totalXP = courses.reduce((sum, c) => sum + (c.progress?.xpEarned || 0), 0);
-
     return (
-        <div className="max-w-6xl mx-auto space-y-8">
+        <div className="max-w-6xl mx-auto space-y-6 sm:space-y-8">
             {/* Welcome Banner */}
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-600 via-purple-700 to-indigo-900 p-8 sm:p-10 shadow-2xl shadow-indigo-500/20"
+                className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-600 via-purple-700 to-indigo-900 p-5 sm:p-8 shadow-2xl shadow-indigo-500/20"
             >
                 <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 rounded-full bg-white/5 blur-3xl mix-blend-overlay pointer-events-none" />
                 <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-80 h-80 rounded-full bg-indigo-500/20 blur-3xl pointer-events-none" />
@@ -54,17 +52,13 @@ export default function DashboardPage() {
                             <Sparkles className="w-4 h-4 text-indigo-300" />
                             <span>Welcome back, {user?.displayName?.split(" ")[0] || "Learner"}!</span>
                         </div>
-                        <h1 className="text-4xl sm:text-5xl font-bold text-white tracking-tight leading-tight">
+                        <h1 className="text-3xl sm:text-5xl font-bold text-white tracking-tight leading-tight">
                             Ready to expand your{" "}
                             <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-200 to-purple-200">
                                 knowledge?
                             </span>
                         </h1>
-                        <div className="flex items-center gap-6 text-indigo-200/80 text-sm">
-                            <span className="flex items-center gap-1.5">
-                                <Zap className="w-4 h-4 text-yellow-400" />
-                                {totalXP} XP earned
-                            </span>
+                        <div className="flex flex-wrap items-center gap-4 sm:gap-6 text-indigo-200/80 text-sm">
                             <span className="flex items-center gap-1.5">
                                 <BookOpen className="w-4 h-4" />
                                 {courses.length} course{courses.length !== 1 ? "s" : ""}
@@ -73,7 +67,7 @@ export default function DashboardPage() {
                     </div>
                     <Link
                         href="/dashboard/create"
-                        className="group shrink-0 relative px-6 py-3 rounded-xl bg-white text-indigo-900 font-semibold shadow-xl shadow-white/10 hover:shadow-white/20 transition-all hover:-translate-y-0.5"
+                        className="group shrink-0 relative px-5 py-3 rounded-xl bg-white text-indigo-900 font-semibold shadow-xl shadow-white/10 hover:shadow-white/20 transition-all hover:-translate-y-0.5"
                     >
                         <span className="flex items-center gap-2">
                             <Plus className="w-4 h-4" />
@@ -101,7 +95,7 @@ export default function DashboardPage() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.2 }}
-                        className="rounded-3xl border-2 border-dashed border-gray-200 bg-gray-50/50 dark:border-white/10 dark:bg-white/[0.02] p-12 flex flex-col items-center justify-center text-center"
+                        className="rounded-3xl border-2 border-dashed border-gray-200 bg-gray-50/50 dark:border-white/10 dark:bg-white/[0.02] p-7 sm:p-12 flex flex-col items-center justify-center text-center"
                     >
                         <div className="w-20 h-20 rounded-2xl bg-indigo-100 dark:bg-indigo-500/10 flex items-center justify-center mb-6">
                             <BrainCircuit className="w-10 h-10 text-indigo-500 dark:text-indigo-400" />
@@ -189,10 +183,9 @@ export default function DashboardPage() {
                                                         <span className="text-xs text-gray-400 dark:text-slate-500 capitalize">
                                                             {course.difficulty || "beginner"} • {course.courseType || "knowledge"}
                                                         </span>
-                                                        <div className="flex items-center gap-1 text-xs text-yellow-500 dark:text-yellow-400">
-                                                            <Zap className="w-3 h-3" />
-                                                            {course.progress?.xpEarned || 0} XP
-                                                        </div>
+                                                        <span className="text-xs text-gray-400 dark:text-slate-500">
+                                                            {course.chapters?.length || 0} chapters
+                                                        </span>
                                                     </div>
                                                 </div>
                                             </div>

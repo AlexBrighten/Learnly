@@ -51,25 +51,12 @@ export default function CreateCoursePage() {
     const [courseType, setCourseType] = useState("");
     const [difficulty, setDifficulty] = useState("");
     const [selectedMaterials, setSelectedMaterials] = useState([]);
-    const [allSelected, setAllSelected] = useState(false);
     const [generating, setGenerating] = useState(false);
     const [error, setError] = useState("");
 
     const toggleMaterial = (id) => {
-        if (id === "all") {
-            if (allSelected) {
-                setSelectedMaterials([]);
-                setAllSelected(false);
-            } else {
-                setSelectedMaterials(MATERIALS.map((m) => m.id));
-                setAllSelected(true);
-            }
-            return;
-        }
         setSelectedMaterials((prev) => {
-            const next = prev.includes(id) ? prev.filter((m) => m !== id) : [...prev, id];
-            setAllSelected(next.length === MATERIALS.length);
-            return next;
+            return prev.includes(id) ? prev.filter((m) => m !== id) : [...prev, id];
         });
     };
 
@@ -166,11 +153,11 @@ export default function CreateCoursePage() {
     }
 
     return (
-        <div className="max-w-3xl mx-auto">
+        <div className="max-w-3xl mx-auto pb-2 sm:pb-0">
             {/* Progress Bar */}
-            <div className="mb-10">
-                <div className="flex items-center justify-between mb-3">
-                    <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+            <div className="mb-8 sm:mb-10">
+                <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between mb-3">
+                    <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
                         <Sparkles className="w-6 h-6 text-indigo-500 dark:text-indigo-400" />
                         Create a Course
                     </h1>
@@ -198,7 +185,7 @@ export default function CreateCoursePage() {
                     {step === 0 && (
                         <div className="space-y-6">
                             <div>
-                                <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">What do you want to learn?</h2>
+                                <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-2">What do you want to learn?</h2>
                                 <p className="text-gray-500 dark:text-slate-400">Enter any topic and our AI will create a personalized course for you.</p>
                             </div>
                             <div className="relative">
@@ -208,7 +195,7 @@ export default function CreateCoursePage() {
                                     onChange={(e) => setTopic(e.target.value)}
                                     onKeyDown={(e) => e.key === "Enter" && canProceed() && nextStep()}
                                     placeholder="e.g. Machine Learning, React.js, World History..."
-                                    className="w-full px-6 py-5 text-lg rounded-2xl bg-gray-50 border-2 border-gray-200 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-indigo-500 focus:bg-white transition-all dark:bg-white/5 dark:border-white/10 dark:text-white dark:placeholder-slate-500 dark:focus:border-indigo-500 dark:focus:bg-white/[0.07]"
+                                    className="w-full px-5 py-4 sm:py-5 text-base sm:text-lg rounded-2xl bg-gray-50 border-2 border-gray-200 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-indigo-500 focus:bg-white transition-all dark:bg-white/5 dark:border-white/10 dark:text-white dark:placeholder-slate-500 dark:focus:border-indigo-500 dark:focus:bg-white/[0.07]"
                                     autoFocus
                                 />
                                 <BookOpen className="absolute right-5 top-1/2 -translate-y-1/2 w-6 h-6 text-gray-400 dark:text-slate-500" />
@@ -220,7 +207,7 @@ export default function CreateCoursePage() {
                     {step === 1 && (
                         <div className="space-y-6">
                             <div>
-                                <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Choose your learning style</h2>
+                                <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-2">Choose your learning style</h2>
                                 <p className="text-gray-500 dark:text-slate-400">How do you want to approach <span className="text-indigo-600 dark:text-indigo-400 font-medium">{topic}</span>?</p>
                             </div>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -230,7 +217,7 @@ export default function CreateCoursePage() {
                                         whileHover={{ scale: 1.02 }}
                                         whileTap={{ scale: 0.98 }}
                                         onClick={() => setCourseType(type.id)}
-                                        className={`p-6 rounded-2xl border-2 text-left transition-all ${
+                                        className={`relative p-5 sm:p-6 rounded-2xl border-2 text-left transition-all ${
                                             courseType === type.id
                                                 ? "border-indigo-500 bg-indigo-50 dark:bg-indigo-500/10"
                                                 : "border-gray-200 bg-white hover:border-gray-300 dark:border-white/10 dark:bg-white/5 dark:hover:border-white/20"
@@ -260,7 +247,7 @@ export default function CreateCoursePage() {
                     {step === 2 && (
                         <div className="space-y-6">
                             <div>
-                                <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Select difficulty</h2>
+                                <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-2">Select difficulty</h2>
                                 <p className="text-gray-500 dark:text-slate-400">Choose the level that matches your current knowledge.</p>
                             </div>
                             <div className="space-y-4">
@@ -270,7 +257,7 @@ export default function CreateCoursePage() {
                                         whileHover={{ scale: 1.01 }}
                                         whileTap={{ scale: 0.99 }}
                                         onClick={() => setDifficulty(diff.id)}
-                                        className={`w-full p-6 rounded-2xl border-2 text-left transition-all flex items-center gap-5 ${
+                                        className={`w-full p-5 sm:p-6 rounded-2xl border-2 text-left transition-all flex items-center gap-4 sm:gap-5 ${
                                             difficulty === diff.id
                                                 ? diff.color + " border-2"
                                                 : "border-gray-200 bg-white hover:border-gray-300 dark:border-white/10 dark:bg-white/5 dark:hover:border-white/20"
@@ -294,25 +281,9 @@ export default function CreateCoursePage() {
                     {step === 3 && (
                         <div className="space-y-6">
                             <div>
-                                <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Pick your materials</h2>
+                                <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-2">Pick your materials</h2>
                                 <p className="text-gray-500 dark:text-slate-400">Select what study materials you want generated.</p>
                             </div>
-
-                            {/* Select All */}
-                            <motion.button
-                                whileHover={{ scale: 1.01 }}
-                                whileTap={{ scale: 0.99 }}
-                                onClick={() => toggleMaterial("all")}
-                                className={`w-full p-5 rounded-2xl border-2 flex items-center gap-4 transition-all ${
-                                    allSelected
-                                        ? "border-indigo-500 bg-indigo-50 dark:bg-indigo-500/10"
-                                        : "border-gray-200 bg-white hover:border-gray-300 dark:border-white/10 dark:bg-white/5 dark:hover:border-white/20"
-                                }`}
-                            >
-                                <Sparkles className="w-5 h-5 text-indigo-500 dark:text-indigo-400" />
-                                <span className="font-semibold text-gray-900 dark:text-white">Select All</span>
-                                {allSelected && <CheckCircle2 className="w-5 h-5 text-indigo-500 dark:text-indigo-400 ml-auto" />}
-                            </motion.button>
 
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 {MATERIALS.map((mat) => (
@@ -355,11 +326,11 @@ export default function CreateCoursePage() {
             )}
 
             {/* Navigation */}
-            <div className="flex items-center justify-between mt-10">
+            <div className="flex items-center justify-between mt-8 sm:mt-10 gap-3">
                 <button
                     onClick={() => setStep((s) => Math.max(0, s - 1))}
                     disabled={step === 0}
-                    className="flex items-center gap-2 px-5 py-3 rounded-xl text-gray-500 hover:text-gray-900 dark:text-slate-400 dark:hover:text-white transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                    className="flex items-center gap-2 px-4 sm:px-5 py-3 rounded-xl text-gray-500 hover:text-gray-900 dark:text-slate-400 dark:hover:text-white transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
                 >
                     <ArrowLeft className="w-4 h-4" />
                     Back
@@ -370,7 +341,7 @@ export default function CreateCoursePage() {
                     whileTap={{ scale: canProceed() ? 0.98 : 1 }}
                     onClick={nextStep}
                     disabled={!canProceed()}
-                    className="flex items-center gap-2 px-8 py-3 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold shadow-lg shadow-indigo-500/25 transition-all disabled:opacity-40 disabled:cursor-not-allowed hover:shadow-indigo-500/40"
+                    className="flex items-center gap-2 px-5 sm:px-8 py-3 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold shadow-lg shadow-indigo-500/25 transition-all disabled:opacity-40 disabled:cursor-not-allowed hover:shadow-indigo-500/40"
                 >
                     {step === STEPS.length - 1 ? (
                         <>

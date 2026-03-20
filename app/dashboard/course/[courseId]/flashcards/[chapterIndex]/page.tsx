@@ -18,7 +18,6 @@ export default function FlashcardsPage() {
     const [known, setKnown] = useState(0);
     const [unknown, setUnknown] = useState(0);
     const [finished, setFinished] = useState(false);
-    const [marking, setMarking] = useState(false);
 
     const idx = parseInt(chapterIndex as string);
 
@@ -55,7 +54,6 @@ export default function FlashcardsPage() {
     };
 
     const markCompleted = async () => {
-        setMarking(true);
         try {
             await fetch(`/api/courses/${courseId}/progress`, {
                 method: "POST",
@@ -64,8 +62,6 @@ export default function FlashcardsPage() {
             });
         } catch (err) {
             console.error(err);
-        } finally {
-            setMarking(false);
         }
     };
 
@@ -131,7 +127,6 @@ export default function FlashcardsPage() {
                             style={{ width: `${percentage}%` }}
                         />
                     </div>
-                    <p className="text-indigo-600 dark:text-indigo-400 font-medium">+50 XP earned!</p>
 
                     <div className="flex gap-4 justify-center">
                         <button
@@ -163,10 +158,10 @@ export default function FlashcardsPage() {
                 Back to Course
             </button>
 
-            <div className="flex items-center justify-between mb-6">
+            <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
                 <div className="flex items-center gap-3">
                     <Layers className="w-5 h-5 text-purple-500 dark:text-purple-400" />
-                    <h1 className="text-xl font-bold text-gray-900 dark:text-white">{chapter.title} — Flashcards</h1>
+                    <h1 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">{chapter.title} — Flashcards</h1>
                 </div>
                 <span className="text-sm text-gray-500 dark:text-slate-400">
                     {currentCard + 1} / {flashcards.length}
@@ -200,14 +195,14 @@ export default function FlashcardsPage() {
                             animate={{ rotateY: flipped ? 180 : 0 }}
                             transition={{ duration: 0.5 }}
                             style={{ transformStyle: "preserve-3d" }}
-                            className="relative w-full h-72 rounded-3xl"
+                            className="relative w-full h-64 sm:h-72 rounded-3xl"
                         >
                             {/* Front */}
                             <div
                                 className="absolute inset-0 rounded-3xl bg-gradient-to-br from-purple-100 to-pink-100 border border-purple-200 dark:from-purple-500/20 dark:to-pink-500/20 dark:border-white/10 flex items-center justify-center p-8 backface-hidden"
                                 style={{ backfaceVisibility: "hidden" }}
                             >
-                                <p className="text-xl font-semibold text-gray-900 dark:text-white text-center">
+                                <p className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white text-center">
                                     {flashcards[currentCard]?.front}
                                 </p>
                             </div>
@@ -216,7 +211,7 @@ export default function FlashcardsPage() {
                                 className="absolute inset-0 rounded-3xl bg-gradient-to-br from-indigo-100 to-purple-100 border border-indigo-200 dark:from-indigo-500/20 dark:to-purple-500/20 dark:border-indigo-500/20 flex items-center justify-center p-8"
                                 style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
                             >
-                                <p className="text-lg text-gray-700 dark:text-slate-200 text-center">
+                                <p className="text-base sm:text-lg text-gray-700 dark:text-slate-200 text-center">
                                     {flashcards[currentCard]?.back}
                                 </p>
                             </div>
@@ -234,13 +229,13 @@ export default function FlashcardsPage() {
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="flex gap-4 justify-center"
+                    className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center"
                 >
                     <motion.button
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         onClick={() => handleAnswer(false)}
-                        className="flex items-center gap-2 px-8 py-3 rounded-xl bg-red-50 border border-red-200 text-red-600 font-medium hover:bg-red-100 dark:bg-red-500/10 dark:border-red-500/20 dark:text-red-400 dark:hover:bg-red-500/20 transition-colors"
+                        className="flex items-center justify-center gap-2 px-6 sm:px-8 py-3 rounded-xl bg-red-50 border border-red-200 text-red-600 font-medium hover:bg-red-100 dark:bg-red-500/10 dark:border-red-500/20 dark:text-red-400 dark:hover:bg-red-500/20 transition-colors"
                     >
                         <ThumbsDown className="w-5 h-5" />
                         Don&apos;t Know
@@ -249,7 +244,7 @@ export default function FlashcardsPage() {
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         onClick={() => handleAnswer(true)}
-                        className="flex items-center gap-2 px-8 py-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-600 font-medium hover:bg-emerald-100 dark:bg-emerald-500/10 dark:border-emerald-500/20 dark:text-emerald-400 dark:hover:bg-emerald-500/20 transition-colors"
+                        className="flex items-center justify-center gap-2 px-6 sm:px-8 py-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-600 font-medium hover:bg-emerald-100 dark:bg-emerald-500/10 dark:border-emerald-500/20 dark:text-emerald-400 dark:hover:bg-emerald-500/20 transition-colors"
                     >
                         <ThumbsUp className="w-5 h-5" />
                         Know It

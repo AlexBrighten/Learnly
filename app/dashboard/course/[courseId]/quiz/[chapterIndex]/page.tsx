@@ -3,14 +3,12 @@
 import { useEffect, useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, Loader2, Zap, Clock, CheckCircle2, XCircle, Trophy, RotateCcw } from "lucide-react";
-import { useAuth } from "@/app/context/AuthContext";
 import { useParams, useRouter } from "next/navigation";
 import AskDoubtFAB from "@/components/dashboard/AskDoubtFAB";
 
 const TIMER_SECONDS = 30;
 
 export default function QuizPage() {
-    const { user } = useAuth();
     const { courseId, chapterIndex } = useParams();
     const router = useRouter();
     const [course, setCourse] = useState(null);
@@ -124,7 +122,6 @@ export default function QuizPage() {
     // Score Screen
     if (finished) {
         const percentage = Math.round((score / quiz.length) * 100);
-        const xpEarned = score * 10 + 50;
 
         return (
             <div className="max-w-lg mx-auto">
@@ -173,11 +170,6 @@ export default function QuizPage() {
                         </div>
                     </div>
 
-                    <div className="flex items-center justify-center gap-2 text-yellow-500 dark:text-yellow-400 font-medium">
-                        <Zap className="w-5 h-5" />
-                        +{xpEarned} XP earned!
-                    </div>
-
                     <div className="flex gap-4 justify-center pt-4">
                         <button
                             onClick={restart}
@@ -211,7 +203,7 @@ export default function QuizPage() {
             </button>
 
             {/* Header */}
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
                 <div className="flex items-center gap-3">
                     <Zap className="w-5 h-5 text-orange-500 dark:text-orange-400" />
                     <span className="text-sm text-gray-500 dark:text-slate-400">
@@ -243,7 +235,7 @@ export default function QuizPage() {
                     exit={{ opacity: 0, y: -20 }}
                     className="space-y-6"
                 >
-                    <h2 className="text-xl font-semibold text-gray-900 dark:text-white leading-relaxed">
+                    <h2 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white leading-relaxed">
                         {question?.question}
                     </h2>
 
@@ -268,7 +260,7 @@ export default function QuizPage() {
                                     whileTap={!showFeedback ? { scale: 0.99 } : {}}
                                     onClick={() => handleSelect(optIdx)}
                                     disabled={showFeedback}
-                                    className={`w-full p-4 rounded-xl border-2 text-left transition-all flex items-center gap-4 ${btnClass}`}
+                                    className={`w-full p-3.5 sm:p-4 rounded-xl border-2 text-left transition-all flex items-center gap-3 sm:gap-4 ${btnClass}`}
                                 >
                                     <span className="w-8 h-8 rounded-full bg-gray-100 dark:bg-white/5 flex items-center justify-center text-sm font-medium text-gray-500 dark:text-slate-400 shrink-0">
                                         {String.fromCharCode(65 + optIdx)}

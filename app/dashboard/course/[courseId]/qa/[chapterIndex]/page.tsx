@@ -3,13 +3,11 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, Loader2, HelpCircle, ChevronDown } from "lucide-react";
-import { useAuth } from "@/app/context/AuthContext";
 import { useParams, useRouter } from "next/navigation";
 import MarkdownRenderer from "@/components/dashboard/MarkdownRenderer";
 import AskDoubtFAB from "@/components/dashboard/AskDoubtFAB";
 
 export default function QAPage() {
-    const { user } = useAuth();
     const { courseId, chapterIndex } = useParams();
     const router = useRouter();
     const [course, setCourse] = useState(null);
@@ -64,13 +62,13 @@ export default function QAPage() {
                 Back to Course
             </button>
 
-            <div className="flex items-center gap-3 mb-8">
+            <div className="flex items-center gap-3 mb-6 sm:mb-8">
                 <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center">
                     <HelpCircle className="w-5 h-5 text-white" />
                 </div>
                 <div>
                     <span className="text-xs text-gray-400 dark:text-slate-500 font-medium">CHAPTER {idx + 1} — Q&A</span>
-                    <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{chapter.title}</h1>
+                    <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">{chapter.title}</h1>
                 </div>
             </div>
 
@@ -86,7 +84,7 @@ export default function QAPage() {
                     >
                         <button
                             onClick={() => setExpanded(expanded === qIdx ? null : qIdx)}
-                            className="w-full flex items-center gap-4 p-5 text-left hover:bg-gray-50 dark:hover:bg-white/[0.03] transition-colors"
+                            className="w-full flex items-center gap-3 sm:gap-4 p-4 sm:p-5 text-left hover:bg-gray-50 dark:hover:bg-white/[0.03] transition-colors"
                         >
                             <span className="w-8 h-8 rounded-full bg-emerald-50 dark:bg-emerald-500/10 flex items-center justify-center text-sm font-medium text-emerald-600 dark:text-emerald-400 shrink-0">
                                 {qIdx + 1}
@@ -109,7 +107,7 @@ export default function QAPage() {
                                     transition={{ duration: 0.3 }}
                                     className="overflow-hidden"
                                 >
-                                    <div className="px-5 pb-5 pt-0 pl-[4.25rem] border-t border-gray-100 dark:border-white/5">
+                                    <div className="px-4 sm:px-5 pb-5 pt-0 sm:pl-[4.25rem] border-t border-gray-100 dark:border-white/5">
                                         <div className="pt-4">
                                             <MarkdownRenderer content={item.answer} />
                                         </div>

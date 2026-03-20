@@ -15,7 +15,6 @@ import {
     Loader2,
     Trophy,
 } from "lucide-react";
-import { useAuth } from "@/app/context/AuthContext";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import AskDoubtFAB from "@/components/dashboard/AskDoubtFAB";
@@ -28,7 +27,6 @@ const MATERIAL_ICONS = {
 };
 
 export default function CourseDetailPage() {
-    const { user } = useAuth();
     const { courseId } = useParams();
     const router = useRouter();
     const [course, setCourse] = useState(null);
@@ -96,17 +94,13 @@ export default function CourseDetailPage() {
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="rounded-3xl bg-gradient-to-br from-indigo-100 via-purple-100 to-indigo-100 border border-indigo-200/50 dark:from-indigo-600/20 dark:via-purple-700/20 dark:to-indigo-900/20 dark:border-white/10 p-8 mb-10"
+                className="rounded-3xl bg-gradient-to-br from-indigo-100 via-purple-100 to-indigo-100 border border-indigo-200/50 dark:from-indigo-600/20 dark:via-purple-700/20 dark:to-indigo-900/20 dark:border-white/10 p-5 sm:p-8 mb-8 sm:mb-10"
             >
                 <div className="flex flex-col sm:flex-row items-start justify-between gap-6">
                     <div className="space-y-3">
-                        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{course.title}</h1>
+                        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">{course.title}</h1>
                         <p className="text-gray-600 dark:text-slate-400 max-w-xl">{course.summary}</p>
-                        <div className="flex items-center gap-4 text-sm">
-                            <span className="flex items-center gap-1.5 text-yellow-500 dark:text-yellow-400">
-                                <Zap className="w-4 h-4" />
-                                {course.progress?.xpEarned || 0} XP
-                            </span>
+                        <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-sm">
                             <span className="text-gray-500 dark:text-slate-500 capitalize">
                                 {course.difficulty} • {course.courseType}
                             </span>
@@ -166,7 +160,7 @@ export default function CourseDetailPage() {
                                 <button
                                     onClick={() => status !== "locked" && setExpandedChapter(isExpanded ? null : idx)}
                                     disabled={status === "locked"}
-                                    className={`w-full text-left pl-20 pr-6 py-6 rounded-2xl transition-all duration-300 group ${
+                                    className={`w-full text-left pl-16 sm:pl-20 pr-3 sm:pr-6 py-5 sm:py-6 rounded-2xl transition-all duration-300 group ${
                                         status === "locked"
                                             ? "opacity-50 cursor-not-allowed"
                                             : isExpanded
@@ -175,7 +169,7 @@ export default function CourseDetailPage() {
                                     }`}
                                 >
                                     {/* Circle Node */}
-                                    <div className={`absolute left-4 top-6 w-9 h-9 rounded-full flex items-center justify-center z-10 transition-all duration-300 ${
+                                    <div className={`absolute left-2.5 sm:left-4 top-5 sm:top-6 w-9 h-9 rounded-full flex items-center justify-center z-10 transition-all duration-300 ${
                                         status === "completed"
                                             ? "bg-emerald-500 shadow-lg shadow-emerald-500/30"
                                             : status === "current"
@@ -194,11 +188,6 @@ export default function CourseDetailPage() {
                                     <div>
                                         <div className="flex items-center gap-3 mb-1">
                                             <span className="text-xs text-gray-400 dark:text-slate-500 font-medium">CHAPTER {idx + 1}</span>
-                                            {status === "completed" && (
-                                                <span className="text-xs bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400 px-2 py-0.5 rounded-full font-medium">
-                                                    +50 XP
-                                                </span>
-                                            )}
                                         </div>
                                         <h3 className={`text-lg font-semibold transition-colors ${
                                             status === "locked" ? "text-gray-400 dark:text-slate-500" : "text-gray-900 group-hover:text-indigo-600 dark:text-white dark:group-hover:text-indigo-300"
@@ -215,7 +204,7 @@ export default function CourseDetailPage() {
                                         initial={{ opacity: 0, height: 0 }}
                                         animate={{ opacity: 1, height: "auto" }}
                                         exit={{ opacity: 0, height: 0 }}
-                                        className="pl-20 pr-6 pb-6 grid grid-cols-2 sm:grid-cols-4 gap-3"
+                                        className="pl-16 sm:pl-20 pr-3 sm:pr-6 pb-6 grid grid-cols-2 sm:grid-cols-4 gap-3"
                                     >
                                         {(course.materials || ["notes", "flashcards", "quiz", "qa"]).map((mat) => {
                                             const matInfo = MATERIAL_ICONS[mat];
@@ -244,7 +233,7 @@ export default function CourseDetailPage() {
 
                                 {/* Trophy at end */}
                                 {isLast && (
-                                    <div className="relative pl-20 pb-6">
+                                    <div className="relative pl-16 sm:pl-20 pb-6">
                                         <div className={`absolute left-4 top-0 w-9 h-9 rounded-full flex items-center justify-center z-10 ${
                                             progress === 100
                                                 ? "bg-yellow-500 shadow-lg shadow-yellow-500/30"

@@ -41,11 +41,11 @@ export default function ExplorePage() {
 
   const handleCategory = (cat: typeof categories[number]) => {
     setActiveCategory(cat.name);
-    router.push(`/create?topic=${encodeURIComponent(cat.query)}`);
+    router.push(`/dashboard/create?topic=${encodeURIComponent(cat.query)}`);
   };
 
   const handleFeatured = (item: typeof featured[number]) => {
-    router.push(`/create?topic=${encodeURIComponent(item.query)}`);
+    router.push(`/dashboard/create?topic=${encodeURIComponent(item.query)}`);
   };
 
   return (
@@ -56,7 +56,7 @@ export default function ExplorePage() {
         <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-purple-500/15 blur-[80px] mix-blend-multiply dark:mix-blend-screen animate-pulse-glow" style={{ animationDuration: '10s', animationDelay: '2s' }} />
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 sm:px-8 xl:px-12 space-y-16 pt-4">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 xl:px-12 space-y-12 sm:space-y-16 pt-2 sm:pt-4">
         {/* Browse Disciplines */}
         <div className="space-y-6">
           <div className="flex items-end justify-between">
@@ -71,7 +71,7 @@ export default function ExplorePage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4">
             {categories.map((cat, idx) => (
               <motion.button
                 key={cat.name}
@@ -80,7 +80,7 @@ export default function ExplorePage() {
                 transition={{ delay: 0.05 + idx * 0.03, duration: 0.3, ease: "easeOut" }}
                 onClick={() => handleCategory(cat)}
                 className={cn(
-                  "group flex flex-col items-center justify-center p-4 sm:p-5 rounded-2xl border-2 transition-all duration-200 hover:shadow-lg active:scale-95 aspect-square relative overflow-hidden cursor-pointer",
+                  "group flex flex-col items-center justify-center p-4 sm:p-5 rounded-2xl border-2 transition-all duration-200 hover:shadow-lg active:scale-95 min-h-[110px] sm:aspect-square relative overflow-hidden cursor-pointer",
                   cat.border,
                   activeCategory === cat.name
                     ? "bg-card border-primary shadow-primary/20"
@@ -158,7 +158,7 @@ export default function ExplorePage() {
           initial={{ opacity: 0, scale: 0.97 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.3, duration: 0.4, ease: "easeOut" }}
-          className="relative overflow-hidden rounded-2xl bg-card border border-border p-8 sm:p-12 lg:p-16 flex flex-col items-center justify-center text-center shadow-xl group"
+          className="relative overflow-hidden rounded-2xl bg-card border border-border p-6 sm:p-12 lg:p-16 flex flex-col items-center justify-center text-center shadow-xl group"
         >
           {/* CTA Backgrounds */}
           <div className="absolute inset-0 bg-[#0a0f1c] dark:bg-black/40" />
@@ -169,7 +169,7 @@ export default function ExplorePage() {
             <div className="p-3 rounded-2xl bg-white/10 dark:bg-black/50 backdrop-blur-xl border border-white/20 shadow-xl">
               <Brain className="w-10 h-10 text-primary" />
             </div>
-            <h3 className="text-3xl md:text-4xl lg:text-5xl font-black tracking-tight leading-[1.1] text-white">
+            <h3 className="text-2xl md:text-4xl lg:text-5xl font-black tracking-tight leading-[1.1] text-white">
               Master anything your <br className="hidden sm:block" />
               <span className="text-transparent bg-clip-text bg-gradient-to-b from-white to-white/60">heart desires.</span>
             </h3>
@@ -177,8 +177,8 @@ export default function ExplorePage() {
               Our semantic AI engine constructs personalized learning paths for any niche topic in existence.
             </p>
 
-            <Link href="/create"
-              className="mt-2 flex items-center justify-center gap-3 px-8 sm:px-10 py-4 sm:py-5 rounded-2xl bg-white text-black font-black text-lg hover:scale-105 active:scale-95 transition-all shadow-[0_0_30px_rgba(255,255,255,0.25)] hover:shadow-[0_0_50px_rgba(255,255,255,0.4)] group/btn relative overflow-hidden">
+            <Link href="/dashboard/create"
+              className="mt-2 flex items-center justify-center gap-3 px-6 sm:px-10 py-3.5 sm:py-5 rounded-2xl bg-white text-black font-black text-base sm:text-lg hover:scale-105 active:scale-95 transition-all shadow-[0_0_30px_rgba(255,255,255,0.25)] hover:shadow-[0_0_50px_rgba(255,255,255,0.4)] group/btn relative overflow-hidden">
               <span className="relative z-10 flex items-center gap-3">
                 Start Learning Now <ArrowRight className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" />
               </span>
