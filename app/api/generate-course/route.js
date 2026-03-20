@@ -167,7 +167,7 @@ async function callGeminiWithRetry(apiKey, model, prompt, maxRetries) {
           contents: [{ parts: [{ text: prompt }] }],
           generationConfig: {
             temperature: 0.7,
-            maxOutputTokens: 8192,
+            maxOutputTokens: 65536,
             responseMimeType: "application/json",
           },
         }),
@@ -197,20 +197,81 @@ async function callGeminiWithRetry(apiKey, model, prompt, maxRetries) {
 function parseGeminiResponse(text) {
   if (!text) throw new Error("Empty response from Gemini");
 
+  // Try direct parse first
   try {
-    // Try direct parse first
     return JSON.parse(text);
   } catch {
-    // Try to extract JSON from markdown code fences
-    const jsonMatch = text.match(/```(?:json)?\s*([\s\S]*?)```/);
-    if (jsonMatch) {
-      return JSON.parse(jsonMatch[1].trim());
-    }
-    // Try to find JSON object pattern
-    const objectMatch = text.match(/\{[\s\S]*\}/);
-    if (objectMatch) {
-      return JSON.parse(objectMatch[0]);
-    }
-    throw new Error("Could not parse Gemini response as JSON");
+    // continue to fallbacks
   }
+
+  // Try to extract from markdown code fences
+  const jsonMatch = text.match(/```(?:json)?\s*([\s\S]*?)```/);
+  if (jsonMatch) {
+    try {
+      return JSON.parse(jsonMatch[1].trim());
+    } catch {
+      // continue
+    }
+  }
+
+  // Try to find JSON object pattern
+  const objectMatch = text.match(/\{[\s\S]*\}/);
+  if (objectMatch) {
+    try {
+      return JSON.parse(objectMatch[0]);
+    } catch {
+      // Try to repair truncated JSON
+      const repaired = repairJSON(objectMatch[0]);
+      return JSON.parse(repaired);
+    }
+  }
+
+  throw new Error("Could not parse Gemini response as JSON");
+}
+
+/**
+ * Attempt to repair truncated JSON by closing unclosed brackets,
+ * arrays, strings, and removing trailing commas.
+ */
+function repairJSON(json) {
+  let str = json;
+
+  // Remove trailing incomplete key-value pairs after the last complete value
+  // e.g. `"key": "val", "broken` → `"key": "val"`
+  str = str.replace(/,\s*"[^"]*"?\s*:?\s*"?[^"{}\[\]]*$/, "");
+
+  // Close any unclosed strings
+  const quoteCount = (str.match(/(?<!\\)"/g) || []).length;
+  if (quoteCount % 2 !== 0) {
+    str += '"';
+  }
+
+  // Remove trailing commas before we close brackets
+  str = str.replace(/,\s*$/, "");
+
+  // Count unclosed brackets and close them
+  let braces = 0;
+  let brackets = 0;
+  let inString = false;
+  let escape = false;
+
+  for (const ch of str) {
+    if (escape) { escape = false; continue; }
+    if (ch === '\\') { escape = true; continue; }
+    if (ch === '"') { inString = !inString; continue; }
+    if (inString) continue;
+    if (ch === '{') braces++;
+    else if (ch === '}') braces--;
+    else if (ch === '[') brackets++;
+    else if (ch === ']') brackets--;
+  }
+
+  // Remove any trailing commas again after string repair
+  str = str.replace(/,\s*$/, "");
+
+  // Close unclosed brackets in reverse order (arrays first, then objects)
+  while (brackets > 0) { str += ']'; brackets--; }
+  while (braces > 0) { str += '}'; braces--; }
+
+  return str;
 }
