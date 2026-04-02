@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sparkles, ArrowRight, BrainCircuit, BookOpen, Plus, Zap, Target, Loader2 } from "lucide-react";
+import { Sparkles, ArrowRight, BrainCircuit, BookOpen, Plus, Zap, Target, Loader2, Trash2 } from "lucide-react";
 import { useAuth } from "@/app/context/AuthContext";
 import Link from "next/link";
 
@@ -10,9 +10,14 @@ export default function DashboardPage() {
     const { user } = useAuth();
     const [courses, setCourses] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [contextMenu, setContextMenu] = useState<{ x: number, y: number, courseId: string, courseTitle: string } | null>(null);
 
     useEffect(() => {
         if (user?.uid) fetchCourses();
+        
+        const closeMenu = () => setContextMenu(null);
+        document.addEventListener("click", closeMenu);
+        return () => document.removeEventListener("click", closeMenu);
     }, [user]);
 
     const fetchCourses = async () => {
@@ -27,6 +32,26 @@ export default function DashboardPage() {
         } finally {
             setLoading(false);
         }
+    };
+
+    const handleDeleteCourse = async (id: string, title: string) => {
+        if (!window.confirm(`Are you sure you want to delete "${title}"? This cannot be undone.`)) return;
+        
+        try {
+            const res = await fetch(`/api/courses/${id}`, { method: "DELETE" });
+            if (res.ok) {
+                setCourses(prev => prev.filter(c => c.id !== id));
+            } else {
+                alert("Failed to delete course.");
+            }
+        } catch (err) {
+            console.error("Delete Error:", err);
+        }
+    };
+
+    const handleContextMenu = (e: React.MouseEvent, id: string, title: string) => {
+        e.preventDefault();
+        setContextMenu({ x: e.pageX, y: e.pageY, courseId: id, courseTitle: title });
     };
 
     const getProgress = (course) => {
@@ -72,7 +97,7 @@ export default function DashboardPage() {
                         </div>
                     </div>
                     <Link
-                        href="/create"
+                        href="/dashboard/create"
                         className="group shrink-0 relative px-6 py-3 rounded-xl bg-white text-indigo-900 font-semibold shadow-xl shadow-white/10 hover:shadow-white/20 transition-all hover:-translate-y-0.5"
                     >
                         <span className="flex items-center gap-2">
@@ -114,7 +139,7 @@ export default function DashboardPage() {
                             let our AI build a personalized learning path for you.
                         </p>
                         <Link
-                            href="/create"
+                            href="/dashboard/create"
                             className="group px-6 py-3 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 transition-all hover:-translate-y-0.5"
                         >
                             <span className="flex items-center gap-2">
@@ -136,6 +161,7 @@ export default function DashboardPage() {
                                         initial={{ opacity: 0, y: 20 }}
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{ delay: 0.05 * idx }}
+                                        onContextMenu={(e) => handleContextMenu(e, course.id, course.title)}
                                     >
                                         <Link
                                             href={`/dashboard/course/${course.id}`}
@@ -204,6 +230,28 @@ export default function DashboardPage() {
                     </div>
                 )}
             </div>
+
+            {/* Custom Right-Click Context Menu */}
+            <AnimatePresence>
+                {contextMenu && (
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.95 }}
+                        transition={{ duration: 0.1 }}
+                        className="fixed z-50 min-w-[160px] bg-white dark:bg-[#111827] border border-gray-200 dark:border-white/10 shadow-2xl rounded-xl p-1 backdrop-blur-xl"
+                        style={{ top: contextMenu.y, left: contextMenu.x }}
+                    >
+                        <button
+                            onClick={() => handleDeleteCourse(contextMenu.courseId, contextMenu.courseTitle)}
+                            className="w-full flex items-center gap-2.5 px-3 py-2 text-sm font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-lg transition-colors text-left"
+                        >
+                            <Trash2 className="w-4 h-4 mb-0.5" />
+                            Delete Course
+                        </button>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     );
 }

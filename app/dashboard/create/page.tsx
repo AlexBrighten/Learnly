@@ -80,10 +80,11 @@ export default function CreateCoursePage() {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     topic,
-                    courseType,
+                    type: courseType,
                     difficulty,
                     materials: selectedMaterials,
-                    uid: user.uid,
+                    userId: user.uid,
+                    userEmail: user.email,
                 }),
             });
 

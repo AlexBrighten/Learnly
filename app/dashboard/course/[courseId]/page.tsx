@@ -14,6 +14,7 @@ import {
     Star,
     Loader2,
     Trophy,
+    Trash2,
 } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
@@ -49,6 +50,23 @@ export default function CourseDetailPage() {
         }
     };
 
+    const handleDeleteCourse = async () => {
+        if (!course) return;
+        if (!window.confirm(`Are you sure you want to delete "${course.title}"? This cannot be undone.`)) return;
+        
+        try {
+            const res = await fetch(`/api/courses/${courseId}`, { method: "DELETE" });
+            if (res.ok) {
+                router.push("/dashboard");
+            } else {
+                alert("Failed to delete course.");
+            }
+        } catch (err) {
+            console.error("Delete Error:", err);
+            alert("An error occurred while deleting the course.");
+        }
+    };
+
     if (loading) {
         return (
             <div className="flex items-center justify-center min-h-[60vh]">
@@ -81,14 +99,26 @@ export default function CourseDetailPage() {
 
     return (
         <div className="max-w-4xl mx-auto">
-            {/* Back Button */}
-            <button
-                onClick={() => router.push("/dashboard")}
-                className="flex items-center gap-2 text-gray-500 hover:text-gray-900 dark:text-slate-400 dark:hover:text-white transition-colors mb-6"
-            >
-                <ArrowLeft className="w-4 h-4" />
-                Back to Dashboard
-            </button>
+            {/* Top Bar: Back & Delete */}
+            <div className="flex items-center justify-between mb-6">
+                <button
+                    onClick={() => router.push("/dashboard")}
+                    className="flex items-center gap-2 text-gray-500 hover:text-gray-900 dark:text-slate-400 dark:hover:text-white transition-colors"
+                >
+                    <ArrowLeft className="w-4 h-4" />
+                    Back to Dashboard
+                </button>
+
+                {course && (
+                    <button
+                        onClick={handleDeleteCourse}
+                        className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium text-red-500 hover:text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:text-red-300 dark:hover:bg-red-500/10 transition-colors"
+                    >
+                        <Trash2 className="w-4 h-4 mb-0.5" />
+                        Delete Course
+                    </button>
+                )}
+            </div>
 
             {/* Course Header */}
             <motion.div

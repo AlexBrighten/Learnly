@@ -61,7 +61,6 @@ export default function MobileHeader() {
             </div>
             <div className="min-w-0">
               <p className="text-sm font-medium text-gray-900 dark:text-white truncate">{displayName}</p>
-              <p className="text-xs text-gray-500 dark:text-slate-400 truncate">{user?.email || "No email"}</p>
             </div>
           </div>
 

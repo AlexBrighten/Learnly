@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { Home, Plus, Compass, Moon, Sun } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -9,6 +10,11 @@ import { cn } from "@/lib/utils";
 export default function MobileNav() {
   const pathname = usePathname();
   const { resolvedTheme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const navItems = [
     { icon: Home, label: "Home", href: "/dashboard" },
@@ -51,7 +57,9 @@ export default function MobileNav() {
           onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
           className="flex flex-col items-center justify-center rounded-xl px-2 py-2 text-xs font-medium text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:text-slate-400 dark:hover:bg-white/10 dark:hover:text-white"
         >
-          {resolvedTheme === "dark" ? (
+          {!mounted ? (
+            <Moon className="mb-1 h-4 w-4" />
+          ) : resolvedTheme === "dark" ? (
             <Sun className="mb-1 h-4 w-4" />
           ) : (
             <Moon className="mb-1 h-4 w-4" />
