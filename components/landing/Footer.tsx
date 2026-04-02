@@ -60,7 +60,7 @@ export function Footer() {
           </div>
           <a
             className="flex items-center justify-end px-4 py-2 text-center font-semibold uppercase opacity-70 before:content-['@_'] after:content-['_*'] hover:opacity-100 sm:px-12 md:py-4 lg:text-2xl"
-            href="https://github.com/elitenoire/trylingo"
+            href="https://github.com/AlexBrighten/Learnly"
             target="_blank"
           >
             Github
