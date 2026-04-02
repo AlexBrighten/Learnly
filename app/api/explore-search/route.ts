@@ -12,7 +12,7 @@ export async function GET(req: Request) {
     // Wikipedia Search API URL
     // Prop: extracts (short text), pageimages (thumbnail)
     // Generator: search (to get search results)
-    const wikiUrl = `https://en.wikipedia.org/w/api.php?action=query&format=json&prop=extracts|pageimages&generator=search&exsentences=2&exintro=1&explaintext=1&gsrsearch=${encodeURIComponent(query)}&gsrlimit=10&piprop=thumbnail&pithumbsize=300&origin=*`;
+    const wikiUrl = `https://en.wikipedia.org/w/api.php?action=query&format=json&prop=extracts|pageimages&generator=search&exsentences=5&exintro=1&explaintext=1&gsrsearch=${encodeURIComponent(query)}&gsrlimit=10&piprop=thumbnail&pithumbsize=300&origin=*`;
 
     const response = await fetch(wikiUrl);
     const data = await response.json();

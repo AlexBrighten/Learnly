@@ -103,7 +103,7 @@ export default function NotesPage() {
                     {completed ? (
                         <div className="flex items-center gap-2 text-emerald-500 dark:text-emerald-400 font-medium">
                             <CheckCircle2 className="w-5 h-5" />
-                            Chapter completed! +50 XP
+                            Chapter completed!
                         </div>
                     ) : (
                         <motion.button
@@ -113,7 +113,7 @@ export default function NotesPage() {
                             disabled={marking}
                             className="px-6 py-3 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold shadow-lg shadow-indigo-500/25 disabled:opacity-50"
                         >
-                            {marking ? "Saving..." : "Mark as Completed (+50 XP)"}
+                            {marking ? "Saving..." : "Mark as Completed"}
                         </motion.button>
                     )}
                 </div>

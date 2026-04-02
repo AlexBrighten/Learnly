@@ -131,7 +131,6 @@ export default function FlashcardsPage() {
                             style={{ width: `${percentage}%` }}
                         />
                     </div>
-                    <p className="text-indigo-600 dark:text-indigo-400 font-medium">+50 XP earned!</p>
 
                     <div className="flex gap-4 justify-center">
                         <button
