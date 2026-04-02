@@ -4,7 +4,7 @@ import { FieldValue } from "firebase-admin/firestore";
 
 export async function POST(req) {
   try {
-    const { topic, difficulty, type, userId, userEmail } = await req.json();
+    const { topic, difficulty, type, materials, userId, userEmail } = await req.json();
 
     if (!topic) {
       return NextResponse.json({ error: "Topic is required" }, { status: 400 });
@@ -28,6 +28,7 @@ export async function POST(req) {
 
 Difficulty level: ${difficulty || "intermediate"}
 Content style: ${typeDescriptions[type] || typeDescriptions.flashcards}
+Requested Materials: ${materials?.length ? materials.join(", ") : "notes"}
 
 Return ONLY valid JSON in this exact format (no markdown, no code blocks, just raw JSON):
 {
@@ -38,18 +39,38 @@ Return ONLY valid JSON in this exact format (no markdown, no code blocks, just r
     {
       "title": "Chapter title",
       "summary": "One sentence chapter summary",
-      "lessons": [
+      "notes": "A comprehensively detailed markdown-formatted string with the fully written out study notes for this chapter (minimum 4 paragraphs). Use markdown headers (##), bolded concepts, and bullet points.",
+      "flashcards": [
         {
-          "title": "Lesson title",
-          "content": "The actual lesson content (3-5 sentences or the formatted content based on type)",
-          "keyPoints": ["key point 1", "key point 2", "key point 3"]
+          "front": "Question or term",
+          "back": "Detailed answer or definition"
+        }
+      ],
+      "quiz": [
+        {
+          "question": "A multiple choice question",
+          "options": ["Option A", "Option B", "Option C", "Option D"],
+          "correctAnswer": 0,
+          "explanation": "Why this answer is correct"
+        }
+      ],
+      "qa": [
+        {
+          "question": "A common question about this chapter",
+          "answer": "A detailed answer"
         }
       ]
     }
   ]
 }
 
-Create exactly 4 chapters, each with 3-4 lessons. Make the content educational, concise, and engaging.`;
+Create exactly 4 chapters.
+For each chapter, provide exactly the requested material types:
+- If 'notes' is requested, provide the detailed markdown 'notes' string.
+- If 'flashcards' is requested, provide 5 flashcards.
+- If 'quiz' is requested, provide 5 quiz questions. (IMPORTANT: correctAnswer must be an integer 0-3).
+- If 'qa' is requested, provide 3 Q&A pairs. 
+Make the content educational, concise, and highly engaging.`;
 
     const response = await fetch(GEMINI_URL, {
       method: "POST",
@@ -95,12 +116,13 @@ Create exactly 4 chapters, each with 3-4 lessons. Make the content educational, 
       topic,
       difficulty,
       type,
+      materials: materials || [],
       userId: userId || null,
       userEmail: userEmail || null,
       createdAt: FieldValue.serverTimestamp(),
     });
 
-    return NextResponse.json({ course, docId: docRef.id });
+    return NextResponse.json({ course, courseId: docRef.id });
   } catch (error) {
     console.error("Generate course error:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });

@@ -14,14 +14,18 @@ export async function GET(req) {
 
     const snapshot = await adminDb
       .collection("courses")
-      .where("createdBy", "==", uid)
+      .where("userId", "==", uid)
       .get();
 
     const courses = snapshot.docs
-      .map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }))
+      .map((doc) => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          ...data,
+          createdAt: data.createdAt?.toDate ? data.createdAt.toDate().toISOString() : (data.createdAt || ""),
+        };
+      })
       .sort((a, b) => (b.createdAt || "").localeCompare(a.createdAt || ""));
 
     return NextResponse.json({ courses });

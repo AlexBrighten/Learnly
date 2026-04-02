@@ -8,7 +8,7 @@ import {
   Loader2, X, ArrowRight, Globe, Lightbulb, Sparkles, Compass,
   ChevronRight, Brain, Zap, Target
 } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { cn } from "@/lib/utils";
 
 const categories = [
@@ -108,13 +108,21 @@ function SearchResultCard({ result, onCreateCourse, index }: { result: any; onCr
 
 export default function ExplorePage() {
   const router = useRouter();
-  const [query, setQuery] = useState("");
+  const searchParams = useSearchParams();
+  const [query, setQuery] = useState(searchParams.get("q") || "");
   const [results, setResults] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [searched, setSearched] = useState(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const q = searchParams.get("q");
+    if (q !== null && q !== query) {
+      setQuery(q);
+    }
+  }, [searchParams]);
 
   // Animated placeholder text
   const placeholders = [

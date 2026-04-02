@@ -31,6 +31,7 @@ export default function Sidebar({ className }) {
     const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === "Enter" && searchQuery.trim()) {
             router.push(`/dashboard/explore?q=${encodeURIComponent(searchQuery.trim())}`);
+            setSearchQuery("");
         }
     };
 

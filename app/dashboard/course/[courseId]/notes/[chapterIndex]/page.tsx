@@ -96,7 +96,7 @@ export default function NotesPage() {
                     </div>
                 </div>
 
-                <MarkdownRenderer content={chapter.notes} />
+                <MarkdownRenderer content={chapter.notes || (chapter.lessons ? chapter.lessons.map(l => `### ${l.title}\n\n${l.content}\n\n**Key Points:**\n${l.keyPoints?.map(kp => `- ${kp}`).join('\n')}`).join('\n\n---\n\n') : "No notes available.")} />
 
                 {/* Mark Completed */}
                 <div className="mt-10 pt-6 border-t border-gray-200 dark:border-white/10">

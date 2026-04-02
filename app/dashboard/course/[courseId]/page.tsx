@@ -93,8 +93,7 @@ export default function CourseDetailPage() {
 
     const getChapterStatus = (idx) => {
         if (completedChapters.includes(idx)) return "completed";
-        if (idx === 0 || completedChapters.includes(idx - 1)) return "current";
-        return "locked";
+        return "current";
     };
 
     return (
@@ -188,12 +187,9 @@ export default function CourseDetailPage() {
                             >
                                 {/* Node */}
                                 <button
-                                    onClick={() => status !== "locked" && setExpandedChapter(isExpanded ? null : idx)}
-                                    disabled={status === "locked"}
+                                    onClick={() => setExpandedChapter(isExpanded ? null : idx)}
                                     className={`w-full text-left pl-16 sm:pl-20 pr-3 sm:pr-6 py-5 sm:py-6 rounded-2xl transition-all duration-300 group ${
-                                        status === "locked"
-                                            ? "opacity-50 cursor-not-allowed"
-                                            : isExpanded
+                                        isExpanded
                                             ? "bg-gray-100/80 dark:bg-white/[0.06]"
                                             : "hover:bg-gray-50 dark:hover:bg-white/[0.03]"
                                     }`}
@@ -219,9 +215,7 @@ export default function CourseDetailPage() {
                                         <div className="flex items-center gap-3 mb-1">
                                             <span className="text-xs text-gray-400 dark:text-slate-500 font-medium">CHAPTER {idx + 1}</span>
                                         </div>
-                                        <h3 className={`text-lg font-semibold transition-colors ${
-                                            status === "locked" ? "text-gray-400 dark:text-slate-500" : "text-gray-900 group-hover:text-indigo-600 dark:text-white dark:group-hover:text-indigo-300"
-                                        }`}>
+                                        <h3 className={`text-lg font-semibold transition-colors text-gray-900 group-hover:text-indigo-600 dark:text-white dark:group-hover:text-indigo-300`}>
                                             {chapter.title}
                                         </h3>
                                         <p className="text-sm text-gray-500 dark:text-slate-500 mt-1">{chapter.summary}</p>
@@ -229,7 +223,7 @@ export default function CourseDetailPage() {
                                 </button>
 
                                 {/* Expanded Material Buttons */}
-                                {isExpanded && status !== "locked" && (
+                                {isExpanded && (
                                     <motion.div
                                         initial={{ opacity: 0, height: 0 }}
                                         animate={{ opacity: 1, height: "auto" }}
