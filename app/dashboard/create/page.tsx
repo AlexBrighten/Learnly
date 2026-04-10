@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
     ArrowRight,
@@ -19,7 +19,7 @@ import {
     Zap,
 } from "lucide-react";
 import { useAuth } from "@/app/context/AuthContext";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const STEPS = ["topic", "type", "difficulty", "materials"];
 
@@ -43,9 +43,11 @@ const MATERIALS = [
     { id: "qa", label: "Q&A", icon: HelpCircle, description: "Questions & Answers" },
 ];
 
-export default function CreateCoursePage() {
+function CreateCourseContent() {
     const { user } = useAuth();
     const router = useRouter();
+    const searchParams = useSearchParams();
+    
     const [step, setStep] = useState(0);
     const [topic, setTopic] = useState("");
     const [courseType, setCourseType] = useState("");
@@ -54,6 +56,14 @@ export default function CreateCoursePage() {
     const [allSelected, setAllSelected] = useState(false);
     const [generating, setGenerating] = useState(false);
     const [error, setError] = useState("");
+
+    useEffect(() => {
+        const queryTopic = searchParams?.get("topic");
+        if (queryTopic) {
+            setTopic(queryTopic);
+            setStep(1); // skip topic selection step
+        }
+    }, [searchParams]);
 
     const toggleMaterial = (id) => {
         if (id === "all") {
@@ -386,5 +396,13 @@ export default function CreateCoursePage() {
                 </motion.button>
             </div>
         </div>
+    );
+}
+
+export default function CreateCoursePage() {
+    return (
+        <Suspense fallback={<div className="flex items-center justify-center min-h-[60vh]"><Loader2 className="w-8 h-8 animate-spin text-indigo-500" /></div>}>
+            <CreateCourseContent />
+        </Suspense>
     );
 }

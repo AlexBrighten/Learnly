@@ -124,7 +124,6 @@ export default function QuizPage() {
     // Score Screen
     if (finished) {
         const percentage = Math.round((score / quiz.length) * 100);
-        const xpEarned = score * 10 + 50;
 
         return (
             <div className="max-w-lg mx-auto">
@@ -173,10 +172,7 @@ export default function QuizPage() {
                         </div>
                     </div>
 
-                    <div className="flex items-center justify-center gap-2 text-yellow-500 dark:text-yellow-400 font-medium">
-                        <Zap className="w-5 h-5" />
-                        +{xpEarned} XP earned!
-                    </div>
+
 
                     <div className="flex gap-4 justify-center pt-4">
                         <button

@@ -35,8 +35,6 @@ export default function DashboardPage() {
         return Math.round((completed / total) * 100);
     };
 
-    const totalXP = courses.reduce((sum, c) => sum + (c.progress?.xpEarned || 0), 0);
-
     return (
         <div className="max-w-6xl mx-auto space-y-8">
             {/* Welcome Banner */}
@@ -61,10 +59,6 @@ export default function DashboardPage() {
                             </span>
                         </h1>
                         <div className="flex items-center gap-6 text-indigo-200/80 text-sm">
-                            <span className="flex items-center gap-1.5">
-                                <Zap className="w-4 h-4 text-yellow-400" />
-                                {totalXP} XP earned
-                            </span>
                             <span className="flex items-center gap-1.5">
                                 <BookOpen className="w-4 h-4" />
                                 {courses.length} course{courses.length !== 1 ? "s" : ""}
@@ -189,10 +183,6 @@ export default function DashboardPage() {
                                                         <span className="text-xs text-gray-400 dark:text-slate-500 capitalize">
                                                             {course.difficulty || "beginner"} • {course.courseType || "knowledge"}
                                                         </span>
-                                                        <div className="flex items-center gap-1 text-xs text-yellow-500 dark:text-yellow-400">
-                                                            <Zap className="w-3 h-3" />
-                                                            {course.progress?.xpEarned || 0} XP
-                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>

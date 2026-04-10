@@ -103,10 +103,6 @@ export default function CourseDetailPage() {
                         <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{course.title}</h1>
                         <p className="text-gray-600 dark:text-slate-400 max-w-xl">{course.summary}</p>
                         <div className="flex items-center gap-4 text-sm">
-                            <span className="flex items-center gap-1.5 text-yellow-500 dark:text-yellow-400">
-                                <Zap className="w-4 h-4" />
-                                {course.progress?.xpEarned || 0} XP
-                            </span>
                             <span className="text-gray-500 dark:text-slate-500 capitalize">
                                 {course.difficulty} • {course.courseType}
                             </span>
@@ -194,11 +190,6 @@ export default function CourseDetailPage() {
                                     <div>
                                         <div className="flex items-center gap-3 mb-1">
                                             <span className="text-xs text-gray-400 dark:text-slate-500 font-medium">CHAPTER {idx + 1}</span>
-                                            {status === "completed" && (
-                                                <span className="text-xs bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400 px-2 py-0.5 rounded-full font-medium">
-                                                    +50 XP
-                                                </span>
-                                            )}
                                         </div>
                                         <h3 className={`text-lg font-semibold transition-colors ${
                                             status === "locked" ? "text-gray-400 dark:text-slate-500" : "text-gray-900 group-hover:text-indigo-600 dark:text-white dark:group-hover:text-indigo-300"
