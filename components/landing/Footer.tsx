@@ -91,7 +91,7 @@ export function Footer() {
                 <StartCTA />
               </NextLink>
             ) : (
-              <NextLink href="/learn" className="rounded-full">
+              <NextLink href="/dashboard" className="rounded-full">
                 <StartCTA />
               </NextLink>
             )}
